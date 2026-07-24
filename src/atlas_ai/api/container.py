@@ -3,11 +3,12 @@
 ``ATLAS_ADAPTER_MODE`` selects the adapter set:
 
 - ``mock`` (default): fully offline, deterministic adapters.
-- ``real``: live Zerodha Kite Connect for market data (prices + candles).
+- ``real``: live market data via ``ATLAS_MARKET_DATA_SOURCE`` — ``kite`` (Zerodha
+  Kite Connect, needs a key) or ``yahoo`` (public Yahoo Finance, no key).
   Fundamentals come from ``ATLAS_FUNDAMENTALS_SOURCE`` (``file`` or ``mock``),
-  since Kite provides no fundamentals. The broker still falls back to the mock
-  implementation until its real adapter is built — this is logged so the mixed
-  state is never silent.
+  since neither feed provides fundamentals. The broker still falls back to the
+  mock implementation until its real adapter is built — this is logged so the
+  mixed state is never silent.
 
 The LLM is selected independently of the adapter mode, via ``ATLAS_LLM_PROVIDER``
 (``mock`` or ``anthropic``/Claude), so real narrative generation can be enabled
@@ -23,6 +24,7 @@ from atlas_ai.adapters.config import (
     AdapterMode,
     FundamentalsSource,
     LLMProvider,
+    MarketDataSource,
     Settings,
     load_settings,
 )
@@ -32,6 +34,7 @@ from atlas_ai.adapters.llm.anthropic_llm import AnthropicLLM
 from atlas_ai.adapters.llm.mock_llm import MockLLM
 from atlas_ai.adapters.market_data.kite_market_data import KiteMarketData
 from atlas_ai.adapters.market_data.mock_market_data import MockMarketData
+from atlas_ai.adapters.market_data.yahoo_market_data import YahooMarketData
 from atlas_ai.adapters.persistence.in_memory import (
     InMemoryAuditRepository,
     InMemoryRecommendationRepository,
@@ -72,12 +75,13 @@ class Container:
             self.fundamentals = MockFundamentals()
             self.broker = MockBroker()
         else:
-            self.market_data = self._build_kite_market_data()
+            self.market_data = self._build_market_data()
             self.fundamentals = self._build_fundamentals()
             # A real broker adapter is not built yet; use the mock and say so.
             logger.warning(
-                "ATLAS_ADAPTER_MODE=real: market data is LIVE (Kite); "
-                "broker still uses the mock adapter (real one not built yet)."
+                "ATLAS_ADAPTER_MODE=real: market data is LIVE (%s); "
+                "broker still uses the mock adapter (real one not built yet).",
+                self.settings.market_data_source.value,
             )
             self.broker = MockBroker()
 
@@ -109,7 +113,9 @@ class Container:
             )
         return MockLLM()
 
-    def _build_kite_market_data(self) -> KiteMarketData:
+    def _build_market_data(self) -> MarketDataPort:
+        if self.settings.market_data_source is MarketDataSource.YAHOO:
+            return YahooMarketData()
         return KiteMarketData(
             api_key=self.settings.kite_api_key,
             access_token=self.settings.kite_access_token,

@@ -13,6 +13,11 @@ class AdapterMode(StrEnum):
     REAL = "real"
 
 
+class MarketDataSource(StrEnum):
+    KITE = "kite"      # Zerodha Kite Connect (needs API key + access token)
+    YAHOO = "yahoo"    # public Yahoo Finance (no key)
+
+
 class FundamentalsSource(StrEnum):
     MOCK = "mock"
     FILE = "file"
@@ -35,6 +40,10 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
 
     adapter_mode: AdapterMode = AdapterMode.MOCK
+
+    # In real mode, which market-data feed to use: 'kite' (default; needs a key)
+    # or 'yahoo' (public, no key).
+    market_data_source: MarketDataSource = MarketDataSource.KITE
 
     # Fundamentals source in real mode (Kite does not provide fundamentals).
     # 'file' reads researched data from `fundamentals_path`; 'mock' uses
