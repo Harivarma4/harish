@@ -30,6 +30,7 @@ from atlas_ai.adapters.config import (
 )
 from atlas_ai.adapters.fundamentals.file_fundamentals import FileFundamentalsProvider
 from atlas_ai.adapters.fundamentals.mock_fundamentals import MockFundamentals
+from atlas_ai.adapters.fundamentals.yahoo_fundamentals import YahooFundamentals
 from atlas_ai.adapters.llm.anthropic_llm import AnthropicLLM
 from atlas_ai.adapters.llm.mock_llm import MockLLM
 from atlas_ai.adapters.market_data.kite_market_data import KiteMarketData
@@ -129,6 +130,8 @@ class Container:
                     "to point at a JSON dataset of researched fundamentals."
                 )
             return FileFundamentalsProvider(self.settings.fundamentals_path)
+        if self.settings.fundamentals_source is FundamentalsSource.YAHOO:
+            return YahooFundamentals()
         logger.warning(
             "Fundamentals source is 'mock' in real mode: ROE/PE/etc. are "
             "ILLUSTRATIVE placeholders, not researched data. Set "
