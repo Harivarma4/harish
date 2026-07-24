@@ -20,7 +20,8 @@ class MarketDataSource(StrEnum):
 
 class FundamentalsSource(StrEnum):
     MOCK = "mock"
-    FILE = "file"
+    FILE = "file"      # user-supplied JSON (exact, researched)
+    YAHOO = "yahoo"    # public Yahoo Finance quoteSummary (no key; some gaps)
 
 
 class LLMProvider(StrEnum):

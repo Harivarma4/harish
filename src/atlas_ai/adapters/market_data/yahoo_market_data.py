@@ -16,55 +16,20 @@ JSON-parsing logic is fully unit-tested offline with a fake client.
 from __future__ import annotations
 
 from datetime import UTC, date, datetime, time, timedelta
-from typing import Any, Protocol, runtime_checkable
+from typing import Any
 
-from atlas_ai.domain.enums import Exchange
+from atlas_ai.adapters.yahoo_common import (
+    USER_AGENT,
+    HttpGetClient,
+    HttpxClient,
+    YahooError,
+    ticker_for,
+)
 from atlas_ai.domain.market import Candle, Instrument, Quote
 
+__all__ = ["YahooError", "YahooMarketData"]
+
 _BASE = "https://query1.finance.yahoo.com/v8/finance/chart"
-_UA = "Mozilla/5.0 (compatible; AtlasAI/0.1; +research-tool)"
-_SUFFIX = {Exchange.NSE: ".NS", Exchange.BSE: ".BO"}
-
-
-@runtime_checkable
-class _Response(Protocol):
-    status_code: int
-
-    def json(self) -> Any: ...
-
-
-@runtime_checkable
-class HttpGetClient(Protocol):
-    """Minimal HTTP GET surface (satisfied by ``httpx.Client``)."""
-
-    def get(
-        self, url: str, *, params: dict[str, Any], headers: dict[str, str]
-    ) -> _Response: ...
-
-
-class YahooError(RuntimeError):
-    """Raised for adapter-level failures talking to Yahoo Finance."""
-
-
-class _HttpxClient:
-    """Default ``HttpGetClient`` backed by httpx (a base dependency)."""
-
-    def __init__(self, *, timeout: float = 15.0) -> None:
-        import httpx
-
-        self._client = httpx.Client(timeout=timeout, headers={"User-Agent": _UA})
-
-    def get(
-        self, url: str, *, params: dict[str, Any], headers: dict[str, str]
-    ) -> _Response:
-        return self._client.get(url, params=params, headers=headers)
-
-
-def _ticker(instrument: Instrument) -> str:
-    symbol = instrument.symbol.upper()
-    if symbol.startswith("^"):  # index ticker, e.g. ^NSEI (Nifty 50)
-        return symbol
-    return f"{symbol}{_SUFFIX[instrument.exchange]}"
 
 
 def _epoch(d: date) -> int:
@@ -77,7 +42,7 @@ class YahooMarketData:
     def __init__(
         self, *, client: HttpGetClient | None = None, today: date | None = None
     ) -> None:
-        self._client = client if client is not None else _HttpxClient()
+        self._client = client if client is not None else HttpxClient()
         self._today = today or datetime.now(UTC).date()
 
     # -- MarketDataPort ---------------------------------------------------
@@ -99,7 +64,7 @@ class YahooMarketData:
         if last_price is None and last is not None:
             last_price = last.close
         if last_price is None:
-            raise YahooError(f"No price available for {_ticker(instrument)}")
+            raise YahooError(f"No price available for {ticker_for(instrument)}")
 
         return Quote(
             instrument=instrument,
@@ -112,7 +77,7 @@ class YahooMarketData:
     # -- internals --------------------------------------------------------
 
     def _fetch(self, instrument: Instrument, *, start: date) -> dict[str, Any]:
-        ticker = _ticker(instrument)
+        ticker = ticker_for(instrument)
         url = f"{_BASE}/{ticker}"
         params = {
             "period1": _epoch(start),
@@ -120,7 +85,7 @@ class YahooMarketData:
             "interval": "1d",
         }
         try:
-            resp = self._client.get(url, params=params, headers={"User-Agent": _UA})
+            resp = self._client.get(url, params=params, headers={"User-Agent": USER_AGENT})
         except Exception as exc:  # noqa: BLE001 - surface any client/network error uniformly
             raise YahooError(f"Yahoo request failed for {ticker}: {exc}") from exc
 
