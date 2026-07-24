@@ -1,0 +1,13 @@
+# Code ownership — routes PR review requests.
+# Normal and Emergency changes (see docs/CHANGE_MANAGEMENT.md) require a
+# code-owner approval before merge.
+
+# Default owner for everything in the repo.
+* @Harivarma4
+
+# Domain layer carries the guardrail invariants — review with extra care.
+/src/atlas_ai/domain/ @Harivarma4
+
+# CI, change process, and ownership.
+/.github/ @Harivarma4
+/docs/CHANGE_MANAGEMENT.md @Harivarma4
