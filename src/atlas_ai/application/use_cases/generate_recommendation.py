@@ -12,6 +12,7 @@ from atlas_ai.application.orchestration.pipeline import (
     PipelineResult,
     ResearchPipeline,
 )
+from atlas_ai.application.ports.fundamentals import FundamentalsPort
 from atlas_ai.application.ports.market_data import MarketDataPort
 from atlas_ai.application.ports.repositories import (
     AuditRecord,
@@ -47,6 +48,7 @@ class GenerateRecommendation:
         self,
         *,
         market_data: MarketDataPort,
+        fundamentals: FundamentalsPort,
         pipeline: ResearchPipeline,
         repository: RecommendationRepository,
         audit: AuditRepository,
@@ -54,6 +56,7 @@ class GenerateRecommendation:
         prompt_version: str = "debate-v1",
     ) -> None:
         self._market_data = market_data
+        self._fundamentals = fundamentals
         self._pipeline = pipeline
         self._repository = repository
         self._audit = audit
@@ -66,7 +69,7 @@ class GenerateRecommendation:
         # 1. Gather data through the port (mock or real).
         quote = self._market_data.get_quote(instrument)
         candles = self._market_data.get_candles(instrument, days=command.candle_days)
-        fundamentals = self._market_data.get_fundamentals(instrument)
+        fundamentals = self._fundamentals.get_fundamentals(instrument)
         ctx = AgentContext(
             instrument=instrument,
             quote=quote,

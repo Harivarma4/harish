@@ -13,6 +13,11 @@ class AdapterMode(StrEnum):
     REAL = "real"
 
 
+class FundamentalsSource(StrEnum):
+    MOCK = "mock"
+    FILE = "file"
+
+
 class Settings(BaseSettings):
     """Application settings, read from the environment (prefix ``ATLAS_``)."""
 
@@ -25,6 +30,12 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
 
     adapter_mode: AdapterMode = AdapterMode.MOCK
+
+    # Fundamentals source in real mode (Kite does not provide fundamentals).
+    # 'file' reads researched data from `fundamentals_path`; 'mock' uses
+    # illustrative placeholders (a loud warning is logged).
+    fundamentals_source: FundamentalsSource = FundamentalsSource.MOCK
+    fundamentals_path: str = ""
 
     mc_simulations: int = Field(default=10_000, ge=100)
     mc_seed: int = 42

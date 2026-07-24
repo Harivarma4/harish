@@ -92,9 +92,29 @@ The master prompt describes loose top-level folders. They map into the package:
 | `api/` | `api/` |
 | `broker-agent` | `application/ports/broker.py` + `adapters/broker/` |
 
+## Real market data (Zerodha Kite Connect)
+
+`ATLAS_ADAPTER_MODE=real` swaps the mock price feed for a live one:
+
+- `adapters/market_data/kite_market_data.py` implements `MarketDataPort`
+  (quotes + candles) against the Kite Connect v3 API. The `kiteconnect` client is
+  injectable (a `KiteClient` Protocol), so the mapping logic is unit-tested
+  offline with a fake client; live calls happen only where you deploy it with an
+  API key + daily access token and outbound access to Kite.
+- Kite provides **no fundamentals**, so those are a separate port
+  (`FundamentalsPort`). In real mode choose the source via
+  `ATLAS_FUNDAMENTALS_SOURCE`: `file` reads a researched JSON dataset
+  (`FileFundamentalsProvider`, see `docs/sample_fundamentals.json`), or `mock`
+  falls back to illustrative placeholders with a logged warning.
+- The LLM and broker still use mock adapters in real mode until their real
+  adapters are built; the container logs this so the mixed state is never silent.
+
+Install the integration with the optional extra: `pip install -e ".[kite]"`.
+
 ## Roadmap (out of scope for this foundation build)
 
-- Real adapters: Zerodha Kite Connect; OpenAI / Claude / Gemini / local models.
+- Real adapters: OpenAI / Claude / Gemini / local models; a fundamentals vendor
+  feed; a live Kite broker adapter (holdings/margins/execution).
 - Remaining agents: news, macro, quant, options, behavioral, portfolio, memory,
   learning; a CEO/COO/CTO orchestration layer.
 - Streaming & storage: Kafka, TimescaleDB, ClickHouse, DuckDB, Elasticsearch,

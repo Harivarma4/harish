@@ -1,0 +1,32 @@
+{
+  "NSE:RELIANCE": {
+    "market_cap_cr": 1900000,
+    "pe": 24.0,
+    "pb": 2.3,
+    "roe_pct": 9.0,
+    "roce_pct": 11.0,
+    "debt_to_equity": 0.42,
+    "operating_margin_pct": 17.0,
+    "net_margin_pct": 8.0,
+    "revenue_growth_pct": 10.0,
+    "earnings_growth_pct": 11.0,
+    "dividend_yield_pct": 0.4,
+    "promoter_holding_pct": 50.3,
+    "promoter_pledge_pct": 0.0
+  },
+  "NSE:HDFCBANK": {
+    "market_cap_cr": 1250000,
+    "pe": 19.0,
+    "pb": 2.7,
+    "roe_pct": 17.0,
+    "roce_pct": 15.0,
+    "debt_to_equity": 0.85,
+    "operating_margin_pct": 28.0,
+    "net_margin_pct": 22.0,
+    "revenue_growth_pct": 15.0,
+    "earnings_growth_pct": 18.0,
+    "dividend_yield_pct": 1.1,
+    "promoter_holding_pct": 0.0,
+    "promoter_pledge_pct": 0.0
+  }
+}

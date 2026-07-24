@@ -73,8 +73,37 @@ make docker-up             # docker compose up --build
 ## Configuration
 
 Copy `.env.example` to `.env`. Key setting: `ATLAS_ADAPTER_MODE` (`mock` by
-default — fully offline). Real integration keys (Kite, OpenAI, Anthropic, Gemini)
-are read from the environment and used only when real adapters land.
+default — fully offline).
+
+### Live market data (Zerodha Kite Connect)
+
+`ATLAS_ADAPTER_MODE=real` uses Kite Connect for **real prices and candles**. It
+needs network access to Kite and valid credentials, so it runs where you deploy
+it — not in an offline sandbox.
+
+```bash
+pip install -e ".[kite]"              # installs the kiteconnect SDK
+
+export ATLAS_ADAPTER_MODE=real
+export ATLAS_KITE_API_KEY=your_api_key
+export ATLAS_KITE_ACCESS_TOKEN=your_daily_access_token   # from the Kite login flow
+```
+
+Kite does **not** provide company fundamentals (ROE/PE/etc.). Supply your own
+researched data as JSON and point the app at it:
+
+```bash
+export ATLAS_FUNDAMENTALS_SOURCE=file
+export ATLAS_FUNDAMENTALS_PATH=/path/to/fundamentals.json   # see docs/sample_fundamentals.json
+```
+
+If left as `mock`, fundamentals are illustrative placeholders (the app logs a
+warning). In real mode the LLM and broker still use mock adapters until their
+real adapters are built — this is logged, never silent.
+
+> The `access_token` is short-lived: Kite issues it via the login/`request_token`
+> exchange and it expires daily. Generating and refreshing it is outside this
+> foundation build.
 
 ## Development
 
