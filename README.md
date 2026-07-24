@@ -127,3 +127,6 @@ you deploy it — not in an offline sandbox.
 - **Conventional Commits** for every change.
 - Quality gate (`make check`) runs ruff, mypy, bandit, and pytest — the same
   gate enforced in CI (`.github/workflows/ci.yml`).
+- Change process (branching, CAB change classes, review, releases, rollback):
+  [docs/CHANGE_MANAGEMENT.md](docs/CHANGE_MANAGEMENT.md). Changes are tracked in
+  [CHANGELOG.md](CHANGELOG.md).
