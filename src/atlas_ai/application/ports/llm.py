@@ -23,6 +23,11 @@ class LLMPort(Protocol):
     that recommendations are reproducible and auditable.
     """
 
+    @property
+    def model_version(self) -> str:
+        """Identifier of the underlying model, recorded in governance metadata."""
+        ...
+
     def complete(
         self, prompt: str, *, system: str | None = None, prompt_version: str = "v1"
     ) -> LLMResponse: ...

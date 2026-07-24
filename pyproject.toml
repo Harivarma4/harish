@@ -31,6 +31,10 @@ dev = [
 kite = [
     "kiteconnect>=4.2",
 ]
+# Real Claude (Anthropic) LLM integration. Not required for mock mode.
+anthropic = [
+    "anthropic>=0.40",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/atlas_ai"]
