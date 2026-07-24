@@ -15,6 +15,10 @@ MODEL_NAME = "atlas-mock-llm-v1"
 class MockLLM:
     """Rule-based narrator satisfying ``LLMPort`` without any network call."""
 
+    @property
+    def model_version(self) -> str:
+        return MODEL_NAME
+
     def complete(
         self, prompt: str, *, system: str | None = None, prompt_version: str = "v1"
     ) -> LLMResponse:

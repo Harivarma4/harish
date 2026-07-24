@@ -3,11 +3,16 @@
 ``ATLAS_ADAPTER_MODE`` selects the adapter set:
 
 - ``mock`` (default): fully offline, deterministic adapters.
-- ``real``: live Zerodha Kite Connect for market data (prices + candles).
+- ``real``: live market data via ``ATLAS_MARKET_DATA_SOURCE`` — ``kite`` (Zerodha
+  Kite Connect, needs a key) or ``yahoo`` (public Yahoo Finance, no key).
   Fundamentals come from ``ATLAS_FUNDAMENTALS_SOURCE`` (``file`` or ``mock``),
-  since Kite provides no fundamentals. The LLM and broker still fall back to the
-  mock implementations until their real adapters are built — this is logged so
-  the mixed state is never silent.
+  since neither feed provides fundamentals. The broker still falls back to the
+  mock implementation until its real adapter is built — this is logged so the
+  mixed state is never silent.
+
+The LLM is selected independently of the adapter mode, via ``ATLAS_LLM_PROVIDER``
+(``mock`` or ``anthropic``/Claude), so real narrative generation can be enabled
+in either mode.
 """
 
 from __future__ import annotations
@@ -18,14 +23,18 @@ from atlas_ai.adapters.broker.mock_broker import MockBroker
 from atlas_ai.adapters.config import (
     AdapterMode,
     FundamentalsSource,
+    LLMProvider,
+    MarketDataSource,
     Settings,
     load_settings,
 )
 from atlas_ai.adapters.fundamentals.file_fundamentals import FileFundamentalsProvider
 from atlas_ai.adapters.fundamentals.mock_fundamentals import MockFundamentals
-from atlas_ai.adapters.llm.mock_llm import MODEL_NAME, MockLLM
+from atlas_ai.adapters.llm.anthropic_llm import AnthropicLLM
+from atlas_ai.adapters.llm.mock_llm import MockLLM
 from atlas_ai.adapters.market_data.kite_market_data import KiteMarketData
 from atlas_ai.adapters.market_data.mock_market_data import MockMarketData
+from atlas_ai.adapters.market_data.yahoo_market_data import YahooMarketData
 from atlas_ai.adapters.persistence.in_memory import (
     InMemoryAuditRepository,
     InMemoryRecommendationRepository,
@@ -62,23 +71,23 @@ class Container:
         self.broker: BrokerPort
 
         if self.settings.adapter_mode is AdapterMode.MOCK:
-            self.llm = MockLLM()
             self.market_data = MockMarketData()
             self.fundamentals = MockFundamentals()
             self.broker = MockBroker()
         else:
-            self.market_data = self._build_kite_market_data()
+            self.market_data = self._build_market_data()
             self.fundamentals = self._build_fundamentals()
-            # Real LLM/broker adapters are not built yet; use mocks and say so.
+            # A real broker adapter is not built yet; use the mock and say so.
             logger.warning(
-                "ATLAS_ADAPTER_MODE=real: market data is LIVE (Kite); "
-                "LLM and broker still use mock adapters (real ones not built yet)."
+                "ATLAS_ADAPTER_MODE=real: market data is LIVE (%s); "
+                "broker still uses the mock adapter (real one not built yet).",
+                self.settings.market_data_source.value,
             )
-            self.llm = MockLLM()
             self.broker = MockBroker()
 
-        # The narrative model is the mock LLM until a real LLM adapter is wired.
-        self._model_version = MODEL_NAME
+        # The LLM is chosen independently of the market-data adapter mode.
+        self.llm = self._build_llm()
+        self._model_version = self.llm.model_version
 
         # Persistence singletons so GET-after-POST works within a process.
         self.repository: RecommendationRepository = InMemoryRecommendationRepository()
@@ -95,7 +104,18 @@ class Container:
             ),
         )
 
-    def _build_kite_market_data(self) -> KiteMarketData:
+    def _build_llm(self) -> LLMPort:
+        if self.settings.llm_provider is LLMProvider.ANTHROPIC:
+            return AnthropicLLM(
+                api_key=self.settings.anthropic_api_key,
+                model=self.settings.anthropic_model,
+                max_tokens=self.settings.anthropic_max_tokens,
+            )
+        return MockLLM()
+
+    def _build_market_data(self) -> MarketDataPort:
+        if self.settings.market_data_source is MarketDataSource.YAHOO:
+            return YahooMarketData()
         return KiteMarketData(
             api_key=self.settings.kite_api_key,
             access_token=self.settings.kite_access_token,

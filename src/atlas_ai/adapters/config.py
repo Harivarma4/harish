@@ -13,9 +13,19 @@ class AdapterMode(StrEnum):
     REAL = "real"
 
 
+class MarketDataSource(StrEnum):
+    KITE = "kite"      # Zerodha Kite Connect (needs API key + access token)
+    YAHOO = "yahoo"    # public Yahoo Finance (no key)
+
+
 class FundamentalsSource(StrEnum):
     MOCK = "mock"
     FILE = "file"
+
+
+class LLMProvider(StrEnum):
+    MOCK = "mock"
+    ANTHROPIC = "anthropic"  # Claude
 
 
 class Settings(BaseSettings):
@@ -31,11 +41,22 @@ class Settings(BaseSettings):
 
     adapter_mode: AdapterMode = AdapterMode.MOCK
 
+    # In real mode, which market-data feed to use: 'kite' (default; needs a key)
+    # or 'yahoo' (public, no key).
+    market_data_source: MarketDataSource = MarketDataSource.KITE
+
     # Fundamentals source in real mode (Kite does not provide fundamentals).
     # 'file' reads researched data from `fundamentals_path`; 'mock' uses
     # illustrative placeholders (a loud warning is logged).
     fundamentals_source: FundamentalsSource = FundamentalsSource.MOCK
     fundamentals_path: str = ""
+
+    # LLM provider for debate/evidence narrative. 'mock' is deterministic and
+    # offline; 'anthropic' uses Claude (requires anthropic_api_key or an
+    # `ant auth login` profile where deployed).
+    llm_provider: LLMProvider = LLMProvider.MOCK
+    anthropic_model: str = "claude-opus-5"
+    anthropic_max_tokens: int = Field(default=2048, ge=64)
 
     mc_simulations: int = Field(default=10_000, ge=100)
     mc_seed: int = 42
