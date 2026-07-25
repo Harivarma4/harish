@@ -51,16 +51,20 @@ def test_postgres_backend_without_url_falls_back_to_memory() -> None:
         InMemoryRecommendationRepository,
     )
 
-    # Default persistence_backend is postgres; with no database_url it must fall
-    # back to the in-memory store rather than attempting a connection.
-    container = Container(Settings(adapter_mode="mock", llm_provider="mock"))
+    # Postgres selected but no database_url -> fall back to in-memory rather than
+    # attempting a connection.
+    container = Container(
+        Settings(adapter_mode="mock", llm_provider="mock", persistence_backend="postgres")
+    )
     assert isinstance(container.repository, InMemoryRecommendationRepository)
     assert isinstance(container.audit, InMemoryAuditRepository)
     assert container._persistence_is_durable is False
 
 
-def test_status_flags_persistence_as_non_durable_by_default() -> None:
-    status = Container(Settings(adapter_mode="mock", llm_provider="mock")).orchestrator.status()
+def test_status_flags_memory_persistence_as_non_durable() -> None:
+    status = Container(
+        Settings(adapter_mode="mock", llm_provider="mock", persistence_backend="memory")
+    ).orchestrator.status()
     memory = next(a for a in status.agents if a.kind is AgentKind.MEMORY)
     assert "in-memory" in memory.data_basis
     assert any("persistence is in-memory" in n.lower() for n in status.readiness_notes)

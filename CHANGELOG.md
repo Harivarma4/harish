@@ -7,6 +7,14 @@ All notable changes to Project Atlas AI are documented here. Format follows
 ## [Unreleased]
 
 ### Added
+- **DuckDB storage backend, now the default** (`ATLAS_PERSISTENCE_BACKEND=duckdb`)
+  — durable, embedded, file-based persistence with **no server**, giving
+  zero-infrastructure durability out of the box. It reuses the JSONB serializer,
+  writes to `ATLAS_DUCKDB_PATH`, and (like every backend) falls back to the
+  in-memory store with a warning when the `duckdb` package is unavailable.
+  `GET /api/v1/status` reports the active backend (DuckDB / Postgres / in-memory).
+
+### Added
 - **Durable Postgres persistence** (`ATLAS_PERSISTENCE_BACKEND=postgres`,
   default) — recommendations and the audit trail persist to Postgres as JSONB
   (via an explicit, round-trip-tested serializer) alongside a queryable

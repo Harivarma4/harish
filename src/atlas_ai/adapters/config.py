@@ -39,7 +39,8 @@ class BrokerSource(StrEnum):
 
 
 class PersistenceBackend(StrEnum):
-    MEMORY = "memory"    # in-process, non-durable (default; used by the test suite)
+    MEMORY = "memory"    # in-process, non-durable (used by the test suite)
+    DUCKDB = "duckdb"    # durable, embedded, file-based (default; zero-infra)
     POSTGRES = "postgres"  # durable Postgres/JSONB (needs a reachable database_url)
 
 
@@ -116,11 +117,14 @@ class Settings(BaseSettings):
     mc_simulations: int = Field(default=10_000, ge=100)
     mc_seed: int = 42
 
-    # Persistence backend for recommendations + the audit trail. 'postgres'
-    # (default) is durable but needs a reachable `database_url` and the `psycopg`
-    # package; when either is absent the container falls back to the in-memory
-    # store (with a warning), so nothing crashes. 'memory' forces in-memory.
-    persistence_backend: PersistenceBackend = PersistenceBackend.POSTGRES
+    # Persistence backend for recommendations + the audit trail. 'duckdb'
+    # (default) is durable, embedded, and file-based (no server) — it just needs
+    # the `duckdb` package and writes to `duckdb_path`. 'postgres' is durable but
+    # needs a reachable `database_url` and the `psycopg` package. 'memory' forces
+    # the in-process store. Any backend falls back to in-memory (with a warning)
+    # when its dependency/target is unavailable, so nothing crashes.
+    persistence_backend: PersistenceBackend = PersistenceBackend.DUCKDB
+    duckdb_path: str = "atlas.duckdb"
     database_url: str = ""
 
     # Credentials (unused in mock mode); present so real adapters can read them.
