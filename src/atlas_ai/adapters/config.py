@@ -28,6 +28,11 @@ class NewsSource(StrEnum):
     GOOGLE = "google"  # public Google News RSS + finance sentiment lexicon
 
 
+class OptionsSource(StrEnum):
+    MOCK = "mock"
+    NSE = "nse"        # public NSE option-chain endpoint (no key; bot-protected)
+
+
 class FundamentalsSource(StrEnum):
     MOCK = "mock"
     FILE = "file"      # user-supplied JSON (exact, researched)
@@ -78,6 +83,11 @@ class Settings(BaseSettings):
     # finance sentiment lexicon; 'mock' uses deterministic synthetic headlines.
     news_source: NewsSource = NewsSource.GOOGLE
     news_query_suffix: str = "share"
+
+    # Options source: 'nse' (default) uses the public NSE option-chain endpoint
+    # (no key; bot-protected, deploy-only); 'mock' uses a deterministic synthetic
+    # chain. A fetch failure degrades to a neutral, no-signal options report.
+    options_source: OptionsSource = OptionsSource.NSE
 
     # LLM provider for debate/evidence narrative. 'mock' is deterministic and
     # offline; 'anthropic' uses Claude (requires anthropic_api_key or an
