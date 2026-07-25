@@ -31,7 +31,7 @@ def test_generate_recommendation_is_complete(container: Container) -> None:
 
     # Full analytical payload present.
     kinds = {r.agent for r in rec.agent_reports}
-    assert len(kinds) == 6  # fundamental, technical, quant, macro, news, risk
+    assert len(kinds) == 7  # fundamental, technical, quant, macro, news, behavioral, risk
     assert 0.0 <= rec.outlook.probability_favourable <= 1.0
     assert rec.outlook.cagr_p05.value <= rec.outlook.cagr_p95.value
     assert rec.risk.stop_loss < rec.risk.entry_price < rec.risk.target_price
