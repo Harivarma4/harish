@@ -53,6 +53,7 @@ from atlas_ai.application.agents.behavioral_agent import BehavioralAgent
 from atlas_ai.application.agents.debate_agent import DebateAgent
 from atlas_ai.application.agents.evidence_agent import EvidenceAgent
 from atlas_ai.application.agents.fundamental_agent import FundamentalAgent
+from atlas_ai.application.agents.learning_agent import LearningAgent
 from atlas_ai.application.agents.macro_agent import MacroAgent
 from atlas_ai.application.agents.memory_agent import MemoryAgent
 from atlas_ai.application.agents.news_agent import NewsAgent
@@ -137,6 +138,7 @@ class Container:
             options=OptionsAgent(self.options),
             portfolio=PortfolioAgent(self.broker),
             memory=MemoryAgent(self.repository),
+            learning=LearningAgent(),
             risk=RiskAgent(),
             debate=DebateAgent(self.llm),
             evidence=EvidenceAgent(),
