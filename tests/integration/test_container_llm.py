@@ -2,23 +2,22 @@
 
 from __future__ import annotations
 
-import pytest
-
 from atlas_ai.adapters.config import Settings
-from atlas_ai.adapters.llm.anthropic_llm import AnthropicError
 from atlas_ai.adapters.llm.mock_llm import MockLLM
 from atlas_ai.api.container import Container
 
 
-def test_default_provider_is_mock() -> None:
+def test_explicit_mock_provider() -> None:
     container = Container(Settings(adapter_mode="mock", llm_provider="mock"))
     assert isinstance(container.llm, MockLLM)
     assert container._model_version == container.llm.model_version
+    assert container._llm_is_real is False
 
 
-def test_anthropic_provider_builds_claude_adapter() -> None:
+def test_anthropic_provider_degrades_to_mock_without_claude() -> None:
     # Selecting the anthropic provider routes to AnthropicLLM. Without the
-    # optional `anthropic` package installed, constructing the real client
-    # fails with AnthropicError — proving the wiring reaches the adapter.
-    with pytest.raises(AnthropicError):
-        Container(Settings(adapter_mode="mock", llm_provider="anthropic"))
+    # optional `anthropic` package / credentials, the container degrades to the
+    # deterministic mock (with a warning) instead of crashing.
+    container = Container(Settings(adapter_mode="mock", llm_provider="anthropic"))
+    assert isinstance(container.llm, MockLLM)
+    assert container._llm_is_real is False

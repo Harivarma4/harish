@@ -100,10 +100,11 @@ class Settings(BaseSettings):
     # warning) when credentials are absent.
     broker_source: BrokerSource = BrokerSource.KITE
 
-    # LLM provider for debate/evidence narrative. 'mock' is deterministic and
-    # offline; 'anthropic' uses Claude (requires anthropic_api_key or an
-    # `ant auth login` profile where deployed).
-    llm_provider: LLMProvider = LLMProvider.MOCK
+    # LLM provider for debate/evidence narrative. 'anthropic' (default) uses
+    # Claude (needs anthropic_api_key or an `ant auth login` profile plus the
+    # `anthropic` package); when those are unavailable the container falls back
+    # to the deterministic offline mock (with a warning). 'mock' forces the mock.
+    llm_provider: LLMProvider = LLMProvider.ANTHROPIC
     anthropic_model: str = "claude-opus-5"
     anthropic_max_tokens: int = Field(default=2048, ge=64)
 
