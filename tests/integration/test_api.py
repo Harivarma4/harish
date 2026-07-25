@@ -38,7 +38,7 @@ def test_create_and_fetch_recommendation(client: TestClient) -> None:
     assert body["symbol"] == "RELIANCE"
     assert body["action"] in {"BUY", "ACCUMULATE", "HOLD", "REDUCE", "SELL", "AVOID"}
     assert body["disclaimer"]
-    assert len(body["agent_reports"]) == 9
+    assert len(body["agent_reports"]) == 10
     assert body["evidence"]
     assert body["outlook"]["simulations"] > 0
     assert "reasoning_summary" in body["governance"]
