@@ -20,15 +20,16 @@ from atlas_ai.domain.value_objects import Confidence, Percent
 
 # Relative weights when blending specialist scores into a single edge.
 _WEIGHTS = {
-    AgentKind.FUNDAMENTAL: 0.24,
-    AgentKind.TECHNICAL: 0.15,
-    AgentKind.QUANT: 0.11,
+    AgentKind.FUNDAMENTAL: 0.23,
+    AgentKind.TECHNICAL: 0.14,
+    AgentKind.QUANT: 0.10,
     AgentKind.MACRO: 0.09,
-    AgentKind.NEWS: 0.09,
+    AgentKind.NEWS: 0.08,
     AgentKind.BEHAVIORAL: 0.07,
     AgentKind.OPTIONS: 0.06,
     AgentKind.PORTFOLIO: 0.05,
     AgentKind.MEMORY: 0.03,
+    AgentKind.LEARNING: 0.04,
     AgentKind.RISK: 0.11,
 }
 # Strength of the Beta prior update (pseudo-observations). Higher = more shrinkage.

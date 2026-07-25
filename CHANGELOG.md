@@ -7,6 +7,11 @@ All notable changes to Project Atlas AI are documented here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Learning agent** — instrument-specific calibration from a transparent
+  walk-forward self-backtest of a long-only trend rule (close above its SMA held
+  a fixed horizon) over the candles in context: historical hit-rate, per-trade
+  Sharpe (reliability), and a live rule reading that is only actionable when the
+  backtest shows edge. The prediction engine now blends 11 agent scores.
 - **Memory agent** — an institutional-memory prior from past recommendations on
   the same instrument (read through the recommendation repository): a
   recency-weighted mean of prior directional calls plus a view-stability read.

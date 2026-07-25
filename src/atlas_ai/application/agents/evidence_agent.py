@@ -24,6 +24,7 @@ _SOURCES = {
     AgentKind.OPTIONS: Source("Atlas options/derivatives engine", 0.7),
     AgentKind.PORTFOLIO: Source("Atlas portfolio-construction engine", 0.72),
     AgentKind.MEMORY: Source("Atlas institutional-memory engine", 0.65),
+    AgentKind.LEARNING: Source("Atlas learning/backtest engine", 0.7),
     AgentKind.RISK: Source("Atlas risk model", 0.8),
 }
 

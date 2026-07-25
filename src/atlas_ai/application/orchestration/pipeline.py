@@ -1,7 +1,7 @@
 """ResearchPipeline — wires the agents into the end-to-end research flow.
 
     data → [fundamental, technical, quant, macro, news, behavioral, options,
-            portfolio, memory]
+            portfolio, memory, learning]
          → risk → debate → prediction → evidence
 
 The pipeline produces a structured result; turning that result into a persisted
@@ -18,6 +18,7 @@ from atlas_ai.application.agents.behavioral_agent import BehavioralAgent
 from atlas_ai.application.agents.debate_agent import DebateAgent
 from atlas_ai.application.agents.evidence_agent import EvidenceAgent, EvidenceBundle
 from atlas_ai.application.agents.fundamental_agent import FundamentalAgent
+from atlas_ai.application.agents.learning_agent import LearningAgent
 from atlas_ai.application.agents.macro_agent import MacroAgent
 from atlas_ai.application.agents.memory_agent import MemoryAgent
 from atlas_ai.application.agents.news_agent import NewsAgent
@@ -60,6 +61,7 @@ class ResearchPipeline:
         options: OptionsAgent,
         portfolio: PortfolioAgent,
         memory: MemoryAgent,
+        learning: LearningAgent,
         risk: RiskAgent,
         debate: DebateAgent,
         evidence: EvidenceAgent,
@@ -67,7 +69,7 @@ class ResearchPipeline:
     ) -> None:
         self._graph = AgentGraph(
             [fundamental, technical, quant, macro, news, behavioral, options,
-             portfolio, memory]
+             portfolio, memory, learning]
         )
         self._risk = risk
         self._debate = debate
@@ -76,7 +78,7 @@ class ResearchPipeline:
 
     def run(self, ctx: AgentContext, *, horizon_days: int) -> PipelineResult:
         # 1. Analysis agents (fundamental, technical, quant, macro, news,
-        #    behavioral, options, portfolio, memory) run first.
+        #    behavioral, options, portfolio, memory, learning) run first.
         reports = self._graph.run(ctx)
 
         # 2. Risk plan, and fold its report into the analytical set.
