@@ -9,11 +9,12 @@ from atlas_ai.application.use_cases.generate_recommendation import (
     GenerateRecommendationCommand,
 )
 from atlas_ai.domain.enums import Action, Exchange, TimeHorizon
+from tests.conftest import mock_settings
 
 
 @pytest.fixture
 def container() -> Container:
-    return Container()
+    return Container(mock_settings())
 
 
 def test_generate_recommendation_is_complete(container: Container) -> None:
@@ -45,7 +46,7 @@ def test_generate_recommendation_is_complete(container: Container) -> None:
 
 def test_reproducible_across_runs() -> None:
     def run() -> float:
-        c = Container()
+        c = Container(mock_settings())
         rec = c.generate_recommendation().execute(
             GenerateRecommendationCommand(symbol="INFY", time_horizon=TimeHorizon.LONG_TERM)
         )

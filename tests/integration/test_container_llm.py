@@ -11,7 +11,7 @@ from atlas_ai.api.container import Container
 
 
 def test_default_provider_is_mock() -> None:
-    container = Container(Settings(llm_provider="mock"))
+    container = Container(Settings(adapter_mode="mock", llm_provider="mock"))
     assert isinstance(container.llm, MockLLM)
     assert container._model_version == container.llm.model_version
 
@@ -21,4 +21,4 @@ def test_anthropic_provider_builds_claude_adapter() -> None:
     # optional `anthropic` package installed, constructing the real client
     # fails with AnthropicError — proving the wiring reaches the adapter.
     with pytest.raises(AnthropicError):
-        Container(Settings(llm_provider="anthropic"))
+        Container(Settings(adapter_mode="mock", llm_provider="anthropic"))

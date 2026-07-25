@@ -40,16 +40,18 @@ class Settings(BaseSettings):
     env: str = "local"
     log_level: str = "INFO"
 
-    adapter_mode: AdapterMode = AdapterMode.MOCK
+    # REAL by default: the app runs on real data. Set ATLAS_ADAPTER_MODE=mock
+    # only for fully-offline runs (this is what the test suite forces).
+    adapter_mode: AdapterMode = AdapterMode.REAL
 
-    # In real mode, which market-data feed to use: 'kite' (default; needs a key)
-    # or 'yahoo' (public, no key).
-    market_data_source: MarketDataSource = MarketDataSource.KITE
+    # In real mode, which market-data feed to use: 'yahoo' (default; public, no
+    # key) or 'kite' (Zerodha Kite Connect; needs a key).
+    market_data_source: MarketDataSource = MarketDataSource.YAHOO
 
-    # Fundamentals source in real mode (Kite does not provide fundamentals).
-    # 'file' reads researched data from `fundamentals_path`; 'mock' uses
-    # illustrative placeholders (a loud warning is logged).
-    fundamentals_source: FundamentalsSource = FundamentalsSource.MOCK
+    # Fundamentals source (price feeds don't provide fundamentals): 'yahoo'
+    # (default; public, no key), 'file' (researched JSON at `fundamentals_path`),
+    # or 'mock' (illustrative placeholders; logs a warning).
+    fundamentals_source: FundamentalsSource = FundamentalsSource.YAHOO
     fundamentals_path: str = ""
 
     # LLM provider for debate/evidence narrative. 'mock' is deterministic and

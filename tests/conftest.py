@@ -6,8 +6,18 @@ from datetime import date, timedelta
 
 import pytest
 
+from atlas_ai.adapters.config import Settings
 from atlas_ai.domain.enums import Exchange
 from atlas_ai.domain.market import Candle, Fundamentals, Instrument
+
+
+def mock_settings() -> Settings:
+    """Settings that force the fully-offline mock adapters.
+
+    The application defaults to REAL data; the test suite pins mock so CI runs
+    without network and stays deterministic.
+    """
+    return Settings(adapter_mode="mock", llm_provider="mock")
 
 
 @pytest.fixture
