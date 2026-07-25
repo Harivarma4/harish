@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from datetime import date, timedelta
 
 import pytest
@@ -10,14 +11,23 @@ from atlas_ai.adapters.config import Settings
 from atlas_ai.domain.enums import Exchange
 from atlas_ai.domain.market import Candle, Fundamentals, Instrument
 
+# The app defaults to durable DuckDB persistence, which would write files during
+# tests. Force the in-memory store by default so the suite stays file-free and
+# deterministic; tests that exercise a real backend pass it explicitly (which
+# overrides this env default).
+os.environ.setdefault("ATLAS_PERSISTENCE_BACKEND", "memory")
+
 
 def mock_settings() -> Settings:
     """Settings that force the fully-offline mock adapters.
 
-    The application defaults to REAL data; the test suite pins mock so CI runs
-    without network and stays deterministic.
+    The application defaults to REAL data and durable (DuckDB) persistence; the
+    test suite pins mock adapters and the in-memory store so CI runs without
+    network or files and stays deterministic.
     """
-    return Settings(adapter_mode="mock", llm_provider="mock")
+    return Settings(
+        adapter_mode="mock", llm_provider="mock", persistence_backend="memory"
+    )
 
 
 @pytest.fixture

@@ -26,6 +26,7 @@ dev = [
     "ruff>=0.4",
     "mypy>=1.9",
     "bandit>=1.7",
+    "duckdb>=1.0",  # default persistence backend; exercised by the test suite
 ]
 # Real Zerodha Kite Connect integration. Not required for mock mode.
 kite = [
@@ -35,7 +36,11 @@ kite = [
 anthropic = [
     "anthropic>=0.40",
 ]
-# Durable Postgres persistence. Not required for the in-memory default.
+# Durable, embedded DuckDB persistence (the default backend).
+duckdb = [
+    "duckdb>=1.0",
+]
+# Durable Postgres persistence. Alternative to the DuckDB default.
 postgres = [
     "psycopg[binary]>=3.1",
 ]

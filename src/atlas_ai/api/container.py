@@ -50,6 +50,14 @@ from atlas_ai.adapters.news.google_news import GoogleNewsRSS
 from atlas_ai.adapters.news.mock_news import MockNews
 from atlas_ai.adapters.options.mock_options import MockOptions
 from atlas_ai.adapters.options.nse_options import NseOptions
+from atlas_ai.adapters.persistence.duckdb_store import (
+    DuckDbAuditRepository,
+    DuckDbRecommendationRepository,
+    open_duckdb,
+)
+from atlas_ai.adapters.persistence.duckdb_store import (
+    create_schema as duckdb_create_schema,
+)
 from atlas_ai.adapters.persistence.in_memory import (
     InMemoryAuditRepository,
     InMemoryRecommendationRepository,
@@ -141,8 +149,9 @@ class Container:
         self.llm = self._build_llm()
         self._model_version = self.llm.model_version
 
-        # Persistence: durable Postgres when configured, else in-memory.
+        # Persistence: durable DuckDB/Postgres when configured, else in-memory.
         self._persistence_is_durable = False
+        self._persistence_label = "in-memory"
         self.repository: RecommendationRepository
         self.audit: AuditRepository
         self.repository, self.audit = self._build_persistence()
@@ -217,11 +226,7 @@ class Container:
             AgentKind.BEHAVIORAL: "Derived from price & volume",
             AgentKind.OPTIONS: offline if mock else options,
             AgentKind.PORTFOLIO: offline if mock else broker,
-            AgentKind.MEMORY: (
-                "Recorded recommendation history (Postgres)"
-                if self._persistence_is_durable
-                else "Recorded recommendation history (in-memory)"
-            ),
+            AgentKind.MEMORY: f"Recorded recommendation history ({self._persistence_label})",
             AgentKind.LEARNING: "Derived from price history (backtest)",
             AgentKind.RISK: "Derived from price & volatility",
             AgentKind.DEBATE: llm,
@@ -325,30 +330,55 @@ class Container:
         return MockBroker()
 
     def _build_persistence(self) -> tuple[RecommendationRepository, AuditRepository]:
-        # Postgres is durable but needs a URL + a reachable database; fall back to
-        # the in-memory store (loudly) when it is not configured or not reachable.
-        if self.settings.persistence_backend is PersistenceBackend.POSTGRES:
-            if self.settings.database_url:
-                try:
-                    connect = psycopg_factory(self.settings.database_url)
-                    create_schema(connect)  # also validates connectivity up front
-                except Exception as exc:  # noqa: BLE001 - any driver/DB failure
-                    logger.warning(
-                        "ATLAS_PERSISTENCE_BACKEND=postgres but the database is "
-                        "unavailable (%s); using the in-memory store.", exc,
-                    )
-                else:
-                    self._persistence_is_durable = True
-                    return (
-                        PostgresRecommendationRepository(connect),
-                        PostgresAuditRepository(connect),
-                    )
-            else:
-                logger.warning(
-                    "ATLAS_PERSISTENCE_BACKEND=postgres but ATLAS_DATABASE_URL is "
-                    "unset: using the in-memory store (non-durable). Set it to persist."
-                )
+        # Durable backends fall back to the in-memory store (loudly) when their
+        # dependency/target is unavailable, so the app never fails to start.
+        backend = self.settings.persistence_backend
+        if backend is PersistenceBackend.DUCKDB:
+            repos = self._build_duckdb()
+            if repos is not None:
+                return repos
+        elif backend is PersistenceBackend.POSTGRES:
+            repos = self._build_postgres()
+            if repos is not None:
+                return repos
         return InMemoryRecommendationRepository(), InMemoryAuditRepository()
+
+    def _build_duckdb(self) -> tuple[RecommendationRepository, AuditRepository] | None:
+        try:
+            db = open_duckdb(self.settings.duckdb_path)
+            duckdb_create_schema(db)
+        except Exception as exc:  # noqa: BLE001 - any driver/file failure
+            logger.warning(
+                "ATLAS_PERSISTENCE_BACKEND=duckdb but DuckDB is unavailable (%s); "
+                "using the in-memory store.", exc,
+            )
+            return None
+        self._persistence_is_durable = True
+        self._persistence_label = "DuckDB"
+        return DuckDbRecommendationRepository(db), DuckDbAuditRepository(db)
+
+    def _build_postgres(self) -> tuple[RecommendationRepository, AuditRepository] | None:
+        if not self.settings.database_url:
+            logger.warning(
+                "ATLAS_PERSISTENCE_BACKEND=postgres but ATLAS_DATABASE_URL is "
+                "unset: using the in-memory store (non-durable). Set it to persist."
+            )
+            return None
+        try:
+            connect = psycopg_factory(self.settings.database_url)
+            create_schema(connect)  # also validates connectivity up front
+        except Exception as exc:  # noqa: BLE001 - any driver/DB failure
+            logger.warning(
+                "ATLAS_PERSISTENCE_BACKEND=postgres but the database is "
+                "unavailable (%s); using the in-memory store.", exc,
+            )
+            return None
+        self._persistence_is_durable = True
+        self._persistence_label = "Postgres"
+        return (
+            PostgresRecommendationRepository(connect),
+            PostgresAuditRepository(connect),
+        )
 
     def _build_market_data(self) -> MarketDataPort:
         if self.settings.market_data_source is MarketDataSource.YAHOO:
