@@ -18,6 +18,7 @@ _SOURCES = {
     AgentKind.FUNDAMENTAL: Source("Atlas fundamental engine", 0.85),
     AgentKind.TECHNICAL: Source("Atlas technical engine", 0.7),
     AgentKind.MACRO: Source("Atlas macro engine", 0.75),
+    AgentKind.NEWS: Source("Atlas news-sentiment engine", 0.6),
     AgentKind.RISK: Source("Atlas risk model", 0.8),
 }
 
