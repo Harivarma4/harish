@@ -18,6 +18,11 @@ class MarketDataSource(StrEnum):
     YAHOO = "yahoo"    # public Yahoo Finance (no key)
 
 
+class MacroSource(StrEnum):
+    MOCK = "mock"
+    YAHOO = "yahoo"    # live market vars from Yahoo + configured official figures
+
+
 class FundamentalsSource(StrEnum):
     MOCK = "mock"
     FILE = "file"      # user-supplied JSON (exact, researched)
@@ -53,6 +58,16 @@ class Settings(BaseSettings):
     # or 'mock' (illustrative placeholders; logs a warning).
     fundamentals_source: FundamentalsSource = FundamentalsSource.YAHOO
     fundamentals_path: str = ""
+
+    # Macro source: 'yahoo' (default) fetches live rupee/crude/global vars and
+    # combines them with the official policy figures below (update these from RBI
+    # / MOSPI / NSE releases). 'mock' uses a fixed snapshot.
+    macro_source: MacroSource = MacroSource.YAHOO
+    macro_repo_rate_pct: float = 6.5
+    macro_cpi_inflation_pct: float = 5.0
+    macro_gdp_growth_pct: float = 6.5
+    macro_india_10y_yield_pct: float = 7.0
+    macro_fii_flow_cr: float = 0.0
 
     # LLM provider for debate/evidence narrative. 'mock' is deterministic and
     # offline; 'anthropic' uses Claude (requires anthropic_api_key or an
