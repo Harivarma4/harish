@@ -1,6 +1,6 @@
 """ResearchPipeline — wires the agents into the end-to-end research flow.
 
-    data → [fundamental, technical, macro, news] → risk → debate → prediction → evidence
+    data → [fundamental, technical, quant, macro, news] → risk → debate → prediction → evidence
 
 The pipeline produces a structured result; turning that result into a persisted
 ``Recommendation`` is the job of the use case, keeping orchestration and
@@ -17,6 +17,7 @@ from atlas_ai.application.agents.evidence_agent import EvidenceAgent, EvidenceBu
 from atlas_ai.application.agents.fundamental_agent import FundamentalAgent
 from atlas_ai.application.agents.macro_agent import MacroAgent
 from atlas_ai.application.agents.news_agent import NewsAgent
+from atlas_ai.application.agents.quant_agent import QuantAgent
 from atlas_ai.application.agents.risk_agent import RiskAgent
 from atlas_ai.application.agents.technical_agent import TechnicalAgent
 from atlas_ai.application.orchestration.graph import AgentGraph
@@ -46,6 +47,7 @@ class ResearchPipeline:
         *,
         fundamental: FundamentalAgent,
         technical: TechnicalAgent,
+        quant: QuantAgent,
         macro: MacroAgent,
         news: NewsAgent,
         risk: RiskAgent,
@@ -53,14 +55,14 @@ class ResearchPipeline:
         evidence: EvidenceAgent,
         prediction: PredictionEngine,
     ) -> None:
-        self._graph = AgentGraph([fundamental, technical, macro, news])
+        self._graph = AgentGraph([fundamental, technical, quant, macro, news])
         self._risk = risk
         self._debate = debate
         self._evidence = evidence
         self._prediction = prediction
 
     def run(self, ctx: AgentContext, *, horizon_days: int) -> PipelineResult:
-        # 1. Analysis agents (fundamental + technical + macro + news) populate the context.
+        # 1. Analysis agents (fundamental + technical + quant + macro + news) run first.
         reports = self._graph.run(ctx)
 
         # 2. Risk plan, and fold its report into the analytical set.

@@ -7,6 +7,9 @@ All notable changes to Project Atlas AI are documented here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Quant / factor agent** — momentum, low-volatility, mean-reversion, quality,
+  and value factors computed from the price + fundamentals already in context
+  (no new data feed). The prediction engine now blends 6 agent scores.
 - **News-sentiment agent** — reliability-weighted sentiment from recent coverage
   (weights a Reuters headline above a social post), contributing net sentiment,
   recent-tilt, and coverage signals to every recommendation (via the existing
