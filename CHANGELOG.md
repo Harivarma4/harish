@@ -7,6 +7,15 @@ All notable changes to Project Atlas AI are documented here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Real broker adapter** (`ATLAS_BROKER_SOURCE=kite`, default) — reads live
+  Zerodha Kite Connect equity holdings and margins for the portfolio agent
+  (settled + T1 quantity; non-equity legs skipped). Needs `kite_api_key` +
+  `kite_access_token`; since there is no key-less broker feed, real mode falls
+  back to the mock broker (with a warning) when credentials are absent. The
+  injected client keeps parsing unit-tested offline, and `GET /api/v1/status`
+  now reports the portfolio agent as real vs mock accordingly.
+
+### Added
 - **Orchestration layer** — a thin coordination tier over the agent pipeline,
   framed as CEO (research-not-advice mandate), COO (operations), and CTO
   (readiness). New `GET /api/v1/status` reports every agent's role,
