@@ -56,6 +56,7 @@ from atlas_ai.application.ports.repositories import (
 )
 from atlas_ai.application.prediction.engine import PredictionEngine
 from atlas_ai.application.use_cases.generate_recommendation import GenerateRecommendation
+from atlas_ai.application.use_cases.get_index_trends import GetIndexTrends
 from atlas_ai.application.use_cases.get_weekly_trend import GetWeeklyTrend
 
 logger = logging.getLogger("atlas_ai.container")
@@ -152,3 +153,6 @@ class Container:
 
     def get_weekly_trend(self) -> GetWeeklyTrend:
         return GetWeeklyTrend(market_data=self.market_data)
+
+    def get_index_trends(self) -> GetIndexTrends:
+        return GetIndexTrends(weekly=self.get_weekly_trend())
