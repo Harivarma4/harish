@@ -6,10 +6,11 @@ independently of the model.
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 
 from pydantic import BaseModel, Field
 
+from atlas_ai.application.use_cases.get_weekly_trend import TrendSummary
 from atlas_ai.domain.enums import Exchange, TimeHorizon
 from atlas_ai.domain.recommendation import Recommendation
 
@@ -181,4 +182,43 @@ def to_response(rec: Recommendation) -> RecommendationResponse:
             generated_at=rec.governance.generated_at,
         ),
         disclaimer=rec.disclaimer,
+    )
+
+
+class SessionCloseDTO(BaseModel):
+    on: date
+    close: float
+
+
+class TrendResponse(BaseModel):
+    symbol: str
+    exchange: str
+    as_of: date
+    sessions_count: int
+    first_close: float
+    last_close: float
+    change_pct: float
+    direction: str
+    week_high: float
+    week_low: float
+    sma: float
+    sessions: list[SessionCloseDTO]
+    disclaimer: str
+
+
+def to_trend_response(trend: TrendSummary) -> TrendResponse:
+    return TrendResponse(
+        symbol=trend.instrument.symbol,
+        exchange=trend.instrument.exchange.value,
+        as_of=trend.as_of,
+        sessions_count=len(trend.sessions),
+        first_close=trend.first_close,
+        last_close=trend.last_close,
+        change_pct=trend.change_pct,
+        direction=trend.direction,
+        week_high=trend.week_high,
+        week_low=trend.week_low,
+        sma=trend.sma,
+        sessions=[SessionCloseDTO(on=s.on, close=s.close) for s in trend.sessions],
+        disclaimer=trend.disclaimer,
     )
