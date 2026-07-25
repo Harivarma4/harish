@@ -27,6 +27,7 @@ from atlas_ai.adapters.config import (
     MacroSource,
     MarketDataSource,
     NewsSource,
+    OptionsSource,
     Settings,
     load_settings,
 )
@@ -42,6 +43,8 @@ from atlas_ai.adapters.market_data.mock_market_data import MockMarketData
 from atlas_ai.adapters.market_data.yahoo_market_data import YahooMarketData
 from atlas_ai.adapters.news.google_news import GoogleNewsRSS
 from atlas_ai.adapters.news.mock_news import MockNews
+from atlas_ai.adapters.options.mock_options import MockOptions
+from atlas_ai.adapters.options.nse_options import NseOptions
 from atlas_ai.adapters.persistence.in_memory import (
     InMemoryAuditRepository,
     InMemoryRecommendationRepository,
@@ -52,6 +55,7 @@ from atlas_ai.application.agents.evidence_agent import EvidenceAgent
 from atlas_ai.application.agents.fundamental_agent import FundamentalAgent
 from atlas_ai.application.agents.macro_agent import MacroAgent
 from atlas_ai.application.agents.news_agent import NewsAgent
+from atlas_ai.application.agents.options_agent import OptionsAgent
 from atlas_ai.application.agents.quant_agent import QuantAgent
 from atlas_ai.application.agents.risk_agent import RiskAgent
 from atlas_ai.application.agents.technical_agent import TechnicalAgent
@@ -62,6 +66,7 @@ from atlas_ai.application.ports.llm import LLMPort
 from atlas_ai.application.ports.macro import MacroPort
 from atlas_ai.application.ports.market_data import MarketDataPort
 from atlas_ai.application.ports.news import NewsPort
+from atlas_ai.application.ports.options import OptionsPort
 from atlas_ai.application.ports.repositories import (
     AuditRepository,
     RecommendationRepository,
@@ -86,6 +91,7 @@ class Container:
         self.broker: BrokerPort
         self.macro: MacroPort
         self.news: NewsPort
+        self.options: OptionsPort
 
         if self.settings.adapter_mode is AdapterMode.MOCK:
             self.market_data = MockMarketData()
@@ -93,18 +99,21 @@ class Container:
             self.broker = MockBroker()
             self.macro = MockMacro()
             self.news = MockNews()
+            self.options = MockOptions()
         else:
             self.market_data = self._build_market_data()
             self.fundamentals = self._build_fundamentals()
             self.macro = self._build_macro()
             self.news = self._build_news()
+            self.options = self._build_options()
             # A real broker adapter is not built yet; use the mock and say so.
             logger.warning(
-                "ATLAS_ADAPTER_MODE=real: market data LIVE (%s), macro (%s), news (%s); "
-                "broker still uses the mock adapter (real one pending).",
+                "ATLAS_ADAPTER_MODE=real: market data LIVE (%s), macro (%s), news (%s), "
+                "options (%s); broker still uses the mock adapter (real one pending).",
                 self.settings.market_data_source.value,
                 self.settings.macro_source.value,
                 self.settings.news_source.value,
+                self.settings.options_source.value,
             )
             self.broker = MockBroker()
 
@@ -123,6 +132,7 @@ class Container:
             macro=MacroAgent(self.macro),
             news=NewsAgent(self.news),
             behavioral=BehavioralAgent(),
+            options=OptionsAgent(self.options),
             risk=RiskAgent(),
             debate=DebateAgent(self.llm),
             evidence=EvidenceAgent(),
@@ -155,6 +165,11 @@ class Container:
         if self.settings.news_source is NewsSource.GOOGLE:
             return GoogleNewsRSS(query_suffix=self.settings.news_query_suffix)
         return MockNews()
+
+    def _build_options(self) -> OptionsPort:
+        if self.settings.options_source is OptionsSource.NSE:
+            return NseOptions()
+        return MockOptions()
 
     def _build_market_data(self) -> MarketDataPort:
         if self.settings.market_data_source is MarketDataSource.YAHOO:

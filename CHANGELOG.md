@@ -7,6 +7,15 @@ All notable changes to Project Atlas AI are documented here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Options / derivatives agent** — positioning and sentiment from the nearest
+  option chain: put/call OI ratio (contrarian), max-pain gravitation vs spot,
+  and near-money IV skew, plus ATM Greeks from real Black-Scholes math
+  (`application/pricing/black_scholes.py`: prices, first-order Greeks, and a
+  bisection implied-vol solver). The prediction engine now blends 8 agent scores.
+- **Real options adapter** (`ATLAS_OPTIONS_SOURCE=nse`, default) — the public,
+  key-less NSE option-chain endpoint (bot-protected, so deploy-only; a fetch
+  failure degrades to a neutral, no-signal options report). A deterministic
+  `MockOptions` chain backs the offline test suite.
 - **Behavioral-finance agent** — contrarian market psychology read from the
   candles already in context (no new data feed): a fear/greed index (RSI +
   extension vs the 50-SMA), a volatility regime (short vs baseline ATR), and
