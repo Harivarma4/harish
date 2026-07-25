@@ -6,6 +6,17 @@ All notable changes to Project Atlas AI are documented here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **Durable Postgres persistence** (`ATLAS_PERSISTENCE_BACKEND=postgres`,
+  default) — recommendations and the audit trail persist to Postgres as JSONB
+  (via an explicit, round-trip-tested serializer) alongside a queryable
+  projection; the audit trail is append-only. Needs `ATLAS_DATABASE_URL` + the
+  `psycopg` package (`[postgres]` extra); when either is absent the container
+  falls back to the in-memory store with a warning, and `GET /api/v1/status`
+  reports the memory agent's basis (Postgres vs in-memory) plus a readiness note.
+  The DB connection is injected behind a protocol, so all SQL/mapping is
+  unit-tested offline with a fake connection.
+
 ### Changed
 - **Claude narrative is now the default** (`ATLAS_LLM_PROVIDER=anthropic`). The
   debate/evidence narrative uses the real Claude adapter when the `anthropic`
