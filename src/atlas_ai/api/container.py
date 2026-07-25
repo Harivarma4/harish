@@ -56,6 +56,7 @@ from atlas_ai.application.agents.fundamental_agent import FundamentalAgent
 from atlas_ai.application.agents.macro_agent import MacroAgent
 from atlas_ai.application.agents.news_agent import NewsAgent
 from atlas_ai.application.agents.options_agent import OptionsAgent
+from atlas_ai.application.agents.portfolio_agent import PortfolioAgent
 from atlas_ai.application.agents.quant_agent import QuantAgent
 from atlas_ai.application.agents.risk_agent import RiskAgent
 from atlas_ai.application.agents.technical_agent import TechnicalAgent
@@ -133,6 +134,7 @@ class Container:
             news=NewsAgent(self.news),
             behavioral=BehavioralAgent(),
             options=OptionsAgent(self.options),
+            portfolio=PortfolioAgent(self.broker),
             risk=RiskAgent(),
             debate=DebateAgent(self.llm),
             evidence=EvidenceAgent(),
