@@ -47,6 +47,7 @@ from atlas_ai.application.agents.evidence_agent import EvidenceAgent
 from atlas_ai.application.agents.fundamental_agent import FundamentalAgent
 from atlas_ai.application.agents.macro_agent import MacroAgent
 from atlas_ai.application.agents.news_agent import NewsAgent
+from atlas_ai.application.agents.quant_agent import QuantAgent
 from atlas_ai.application.agents.risk_agent import RiskAgent
 from atlas_ai.application.agents.technical_agent import TechnicalAgent
 from atlas_ai.application.orchestration.pipeline import ResearchPipeline
@@ -109,6 +110,7 @@ class Container:
         self.pipeline = ResearchPipeline(
             fundamental=FundamentalAgent(),
             technical=TechnicalAgent(),
+            quant=QuantAgent(),
             macro=MacroAgent(self.macro),
             news=NewsAgent(self.news),
             risk=RiskAgent(),
