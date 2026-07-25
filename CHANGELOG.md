@@ -12,10 +12,16 @@ All notable changes to Project Atlas AI are documented here. Format follows
   no API key). `mock` is now opt-in and used only by the offline test suite.
 
 ### Added
+- **Real news adapter** (`ATLAS_NEWS_SOURCE=google`, default) — public Google
+  News RSS search feed (no key) with a transparent finance sentiment lexicon and
+  per-source reliability weighting. News is now real by default; a fetch failure
+  degrades to "no news" (neutral) rather than failing the recommendation. **All
+  data feeds now default to real** (news, macro, prices, fundamentals); only the
+  LLM narrative stays mock until an Anthropic key is set.
 - **Real macro adapter** (`ATLAS_MACRO_SOURCE=yahoo`, default) — live rupee
   (`INR=X`), Brent crude (`BZ=F`), and a global-equity proxy (`^GSPC`) from Yahoo,
   combined with official RBI/MOSPI/NSE figures from config (repo, CPI, GDP, 10Y,
-  FII). Macro is now real by default; only news remains a mock feed.
+  FII).
 
 ### Added
 - **Quant / factor agent** — momentum, low-volatility, mean-reversion, quality,

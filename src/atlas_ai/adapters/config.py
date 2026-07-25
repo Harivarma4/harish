@@ -23,6 +23,11 @@ class MacroSource(StrEnum):
     YAHOO = "yahoo"    # live market vars from Yahoo + configured official figures
 
 
+class NewsSource(StrEnum):
+    MOCK = "mock"
+    GOOGLE = "google"  # public Google News RSS + finance sentiment lexicon
+
+
 class FundamentalsSource(StrEnum):
     MOCK = "mock"
     FILE = "file"      # user-supplied JSON (exact, researched)
@@ -68,6 +73,11 @@ class Settings(BaseSettings):
     macro_gdp_growth_pct: float = 6.5
     macro_india_10y_yield_pct: float = 7.0
     macro_fii_flow_cr: float = 0.0
+
+    # News source: 'google' (default) uses the public Google News RSS feed with a
+    # finance sentiment lexicon; 'mock' uses deterministic synthetic headlines.
+    news_source: NewsSource = NewsSource.GOOGLE
+    news_query_suffix: str = "share"
 
     # LLM provider for debate/evidence narrative. 'mock' is deterministic and
     # offline; 'anthropic' uses Claude (requires anthropic_api_key or an

@@ -26,6 +26,7 @@ from atlas_ai.adapters.config import (
     LLMProvider,
     MacroSource,
     MarketDataSource,
+    NewsSource,
     Settings,
     load_settings,
 )
@@ -39,6 +40,7 @@ from atlas_ai.adapters.macro.yahoo_macro import YahooMacro
 from atlas_ai.adapters.market_data.kite_market_data import KiteMarketData
 from atlas_ai.adapters.market_data.mock_market_data import MockMarketData
 from atlas_ai.adapters.market_data.yahoo_market_data import YahooMarketData
+from atlas_ai.adapters.news.google_news import GoogleNewsRSS
 from atlas_ai.adapters.news.mock_news import MockNews
 from atlas_ai.adapters.persistence.in_memory import (
     InMemoryAuditRepository,
@@ -94,14 +96,15 @@ class Container:
             self.market_data = self._build_market_data()
             self.fundamentals = self._build_fundamentals()
             self.macro = self._build_macro()
-            # A real broker adapter is not built yet; news real feed is pending.
+            self.news = self._build_news()
+            # A real broker adapter is not built yet; use the mock and say so.
             logger.warning(
-                "ATLAS_ADAPTER_MODE=real: market data LIVE (%s), macro (%s); "
-                "news and broker still use mock adapters (real ones pending).",
+                "ATLAS_ADAPTER_MODE=real: market data LIVE (%s), macro (%s), news (%s); "
+                "broker still uses the mock adapter (real one pending).",
                 self.settings.market_data_source.value,
                 self.settings.macro_source.value,
+                self.settings.news_source.value,
             )
-            self.news = MockNews()
             self.broker = MockBroker()
 
         # The LLM is chosen independently of the market-data adapter mode.
@@ -145,6 +148,11 @@ class Container:
                 fii_flow_cr=self.settings.macro_fii_flow_cr,
             )
         return MockMacro()
+
+    def _build_news(self) -> NewsPort:
+        if self.settings.news_source is NewsSource.GOOGLE:
+            return GoogleNewsRSS(query_suffix=self.settings.news_query_suffix)
+        return MockNews()
 
     def _build_market_data(self) -> MarketDataPort:
         if self.settings.market_data_source is MarketDataSource.YAHOO:
