@@ -19,7 +19,8 @@ from atlas_ai.domain.forecast import ProbabilisticOutlook
 from atlas_ai.domain.value_objects import Confidence, Percent
 
 # Relative weights when blending specialist scores into a single edge.
-_WEIGHTS = {
+# Public so the orchestrator can report each agent's blend weight.
+AGENT_WEIGHTS = {
     AgentKind.FUNDAMENTAL: 0.23,
     AgentKind.TECHNICAL: 0.14,
     AgentKind.QUANT: 0.10,
@@ -79,7 +80,7 @@ class PredictionEngine:
         total_w = 0.0
         acc = 0.0
         for r in reports:
-            w = _WEIGHTS.get(r.agent, 0.1)
+            w = AGENT_WEIGHTS.get(r.agent, 0.1)
             acc += w * r.score.as_unit()
             total_w += w
         score_edge = acc / total_w if total_w else 0.5

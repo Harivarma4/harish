@@ -6,7 +6,7 @@ from fastapi import FastAPI
 
 from atlas_ai import __version__
 from atlas_ai.api.container import Container
-from atlas_ai.api.routes import health, recommendations, trend
+from atlas_ai.api.routes import health, recommendations, status, trend
 from atlas_ai.domain.recommendation import DISCLAIMER
 
 
@@ -25,6 +25,7 @@ def create_app(container: Container | None = None) -> FastAPI:
     app.include_router(health.router)
     app.include_router(recommendations.router)
     app.include_router(trend.router)
+    app.include_router(status.router)
 
     @app.get("/", tags=["meta"])
     def root() -> dict[str, str]:

@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import logging
 
+from atlas_ai import __version__
 from atlas_ai.adapters.broker.mock_broker import MockBroker
 from atlas_ai.adapters.config import (
     AdapterMode,
@@ -62,7 +63,8 @@ from atlas_ai.application.agents.portfolio_agent import PortfolioAgent
 from atlas_ai.application.agents.quant_agent import QuantAgent
 from atlas_ai.application.agents.risk_agent import RiskAgent
 from atlas_ai.application.agents.technical_agent import TechnicalAgent
-from atlas_ai.application.orchestration.pipeline import ResearchPipeline
+from atlas_ai.application.orchestration.orchestrator import Orchestrator
+from atlas_ai.application.orchestration.pipeline import PIPELINE_VERSION, ResearchPipeline
 from atlas_ai.application.ports.broker import BrokerPort
 from atlas_ai.application.ports.fundamentals import FundamentalsPort
 from atlas_ai.application.ports.llm import LLMPort
@@ -78,6 +80,7 @@ from atlas_ai.application.prediction.engine import PredictionEngine
 from atlas_ai.application.use_cases.generate_recommendation import GenerateRecommendation
 from atlas_ai.application.use_cases.get_index_trends import GetIndexTrends
 from atlas_ai.application.use_cases.get_weekly_trend import GetWeeklyTrend
+from atlas_ai.domain.enums import AgentKind
 
 logger = logging.getLogger("atlas_ai.container")
 
@@ -145,6 +148,87 @@ class Container:
             prediction=PredictionEngine(
                 simulations=self.settings.mc_simulations, seed=self.settings.mc_seed
             ),
+        )
+
+        self.orchestrator = self._build_orchestrator()
+
+    def _build_orchestrator(self) -> Orchestrator:
+        s = self.settings
+        mock = s.adapter_mode is AdapterMode.MOCK
+
+        market = (
+            "Yahoo Finance prices (real)"
+            if s.market_data_source is MarketDataSource.YAHOO
+            else "Zerodha Kite prices (real)"
+        )
+        fundamentals = {
+            FundamentalsSource.YAHOO: "Yahoo Finance fundamentals (real)",
+            FundamentalsSource.FILE: "Researched JSON dataset (real)",
+            FundamentalsSource.MOCK: "mock fundamentals",
+        }[s.fundamentals_source]
+        macro = (
+            "Yahoo live vars + official RBI/MOSPI figures (real)"
+            if s.macro_source is MacroSource.YAHOO
+            else "mock macro snapshot"
+        )
+        news = (
+            "Google News RSS + sentiment lexicon (real)"
+            if s.news_source is NewsSource.GOOGLE
+            else "mock headlines"
+        )
+        options = (
+            "NSE option chain (real)"
+            if s.options_source is OptionsSource.NSE
+            else "mock option chain"
+        )
+        llm = (
+            "Claude narrative (real)"
+            if s.llm_provider is LLMProvider.ANTHROPIC
+            else "deterministic mock narrative"
+        )
+        offline = "mock data (offline)"
+        data_basis = {
+            AgentKind.FUNDAMENTAL: offline if mock else fundamentals,
+            AgentKind.TECHNICAL: offline if mock else market,
+            AgentKind.QUANT: "Derived from price & fundamentals",
+            AgentKind.MACRO: offline if mock else macro,
+            AgentKind.NEWS: offline if mock else news,
+            AgentKind.BEHAVIORAL: "Derived from price & volume",
+            AgentKind.OPTIONS: offline if mock else options,
+            AgentKind.PORTFOLIO: "Mock broker holdings (real adapter pending)",
+            AgentKind.MEMORY: "Recorded recommendation history",
+            AgentKind.LEARNING: "Derived from price history (backtest)",
+            AgentKind.RISK: "Derived from price & volatility",
+            AgentKind.DEBATE: llm,
+            AgentKind.EVIDENCE: "Synthesis of agent reports",
+        }
+
+        notes: list[str] = []
+        if mock:
+            notes.append(
+                "ATLAS_ADAPTER_MODE=mock: market, fundamentals, macro, news, and "
+                "options run on offline mock data."
+            )
+        else:
+            if s.fundamentals_source is FundamentalsSource.MOCK:
+                notes.append(
+                    "Fundamentals are illustrative mock placeholders "
+                    "(set ATLAS_FUNDAMENTALS_SOURCE=yahoo|file)."
+                )
+            notes.append("Broker uses the mock adapter (real Zerodha adapter pending).")
+        if s.llm_provider is LLMProvider.MOCK:
+            notes.append(
+                "LLM narrative is deterministic mock "
+                "(set ATLAS_LLM_PROVIDER=anthropic for Claude)."
+            )
+
+        return Orchestrator(
+            app_name=s.app_name,
+            version=__version__,
+            adapter_mode=s.adapter_mode.value,
+            pipeline_version=PIPELINE_VERSION,
+            data_basis=data_basis,
+            readiness_notes=tuple(notes),
         )
 
     def _build_llm(self) -> LLMPort:

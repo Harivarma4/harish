@@ -55,3 +55,17 @@ def test_unknown_recommendation_404(client: TestClient) -> None:
 def test_invalid_capital_rejected(client: TestClient) -> None:
     resp = client.post("/api/v1/recommendations", json={"symbol": "TCS", "capital": -1})
     assert resp.status_code == 422
+
+
+def test_system_status_lists_all_agents(client: TestClient) -> None:
+    body = client.get("/api/v1/status").json()
+    assert body["adapter_mode"] == "mock"
+    assert body["agent_count"] == len(body["agents"]) >= 11
+    assert body["ceo_mandate"] and body["coo_operations"] and body["cto_readiness"]
+    for agent in body["agents"]:
+        assert agent["kind"] and agent["role"]
+        assert agent["responsibilities"]
+        assert agent["status"] == "operational"
+    # In mock mode nothing is on real data, and readiness notes explain why.
+    assert body["live_on_real_data"] == 0
+    assert body["readiness_notes"]
