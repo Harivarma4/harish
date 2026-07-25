@@ -6,9 +6,10 @@
 - ``real``: live market data via ``ATLAS_MARKET_DATA_SOURCE`` — ``kite`` (Zerodha
   Kite Connect, needs a key) or ``yahoo`` (public Yahoo Finance, no key).
   Fundamentals come from ``ATLAS_FUNDAMENTALS_SOURCE`` (``file`` or ``mock``),
-  since neither feed provides fundamentals. The broker still falls back to the
-  mock implementation until its real adapter is built — this is logged so the
-  mixed state is never silent.
+  since neither feed provides fundamentals. The broker uses Zerodha Kite
+  (``ATLAS_BROKER_SOURCE=kite``) when credentials are set, and falls back to the
+  mock implementation otherwise — this is logged so the mixed state is never
+  silent.
 
 The LLM is selected independently of the adapter mode, via ``ATLAS_LLM_PROVIDER``
 (``mock`` or ``anthropic``/Claude), so real narrative generation can be enabled
@@ -20,9 +21,11 @@ from __future__ import annotations
 import logging
 
 from atlas_ai import __version__
+from atlas_ai.adapters.broker.kite_broker import KiteBroker
 from atlas_ai.adapters.broker.mock_broker import MockBroker
 from atlas_ai.adapters.config import (
     AdapterMode,
+    BrokerSource,
     FundamentalsSource,
     LLMProvider,
     MacroSource,
@@ -99,6 +102,9 @@ class Container:
         self.news: NewsPort
         self.options: OptionsPort
 
+        # Whether the broker is the real Kite adapter (vs the mock fallback).
+        self._broker_is_real = False
+
         if self.settings.adapter_mode is AdapterMode.MOCK:
             self.market_data = MockMarketData()
             self.fundamentals = MockFundamentals()
@@ -112,16 +118,16 @@ class Container:
             self.macro = self._build_macro()
             self.news = self._build_news()
             self.options = self._build_options()
-            # A real broker adapter is not built yet; use the mock and say so.
+            self.broker = self._build_broker()
             logger.warning(
                 "ATLAS_ADAPTER_MODE=real: market data LIVE (%s), macro (%s), news (%s), "
-                "options (%s); broker still uses the mock adapter (real one pending).",
+                "options (%s), broker (%s).",
                 self.settings.market_data_source.value,
                 self.settings.macro_source.value,
                 self.settings.news_source.value,
                 self.settings.options_source.value,
+                "kite" if self._broker_is_real else "mock (no Kite credentials)",
             )
-            self.broker = MockBroker()
 
         # The LLM is chosen independently of the market-data adapter mode.
         self.llm = self._build_llm()
@@ -186,6 +192,11 @@ class Container:
             if s.llm_provider is LLMProvider.ANTHROPIC
             else "deterministic mock narrative"
         )
+        broker = (
+            "Zerodha Kite holdings (real)"
+            if self._broker_is_real
+            else "Mock broker holdings (set Kite credentials for real)"
+        )
         offline = "mock data (offline)"
         data_basis = {
             AgentKind.FUNDAMENTAL: offline if mock else fundamentals,
@@ -195,7 +206,7 @@ class Container:
             AgentKind.NEWS: offline if mock else news,
             AgentKind.BEHAVIORAL: "Derived from price & volume",
             AgentKind.OPTIONS: offline if mock else options,
-            AgentKind.PORTFOLIO: "Mock broker holdings (real adapter pending)",
+            AgentKind.PORTFOLIO: offline if mock else broker,
             AgentKind.MEMORY: "Recorded recommendation history",
             AgentKind.LEARNING: "Derived from price history (backtest)",
             AgentKind.RISK: "Derived from price & volatility",
@@ -215,7 +226,11 @@ class Container:
                     "Fundamentals are illustrative mock placeholders "
                     "(set ATLAS_FUNDAMENTALS_SOURCE=yahoo|file)."
                 )
-            notes.append("Broker uses the mock adapter (real Zerodha adapter pending).")
+            if not self._broker_is_real:
+                notes.append(
+                    "Broker uses the mock adapter (set kite_api_key + "
+                    "kite_access_token for real Zerodha holdings)."
+                )
         if s.llm_provider is LLMProvider.MOCK:
             notes.append(
                 "LLM narrative is deterministic mock "
@@ -260,6 +275,22 @@ class Container:
         if self.settings.options_source is OptionsSource.NSE:
             return NseOptions()
         return MockOptions()
+
+    def _build_broker(self) -> BrokerPort:
+        # There is no key-less broker feed; fall back to mock (loudly) when Kite
+        # is selected but credentials are missing, so real mode never crashes.
+        if self.settings.broker_source is BrokerSource.KITE:
+            if self.settings.kite_api_key and self.settings.kite_access_token:
+                self._broker_is_real = True
+                return KiteBroker(
+                    api_key=self.settings.kite_api_key,
+                    access_token=self.settings.kite_access_token,
+                )
+            logger.warning(
+                "ATLAS_BROKER_SOURCE=kite but kite_api_key/kite_access_token are "
+                "unset: using the mock broker. Set both for real holdings."
+            )
+        return MockBroker()
 
     def _build_market_data(self) -> MarketDataPort:
         if self.settings.market_data_source is MarketDataSource.YAHOO:

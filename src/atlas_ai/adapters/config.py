@@ -33,6 +33,11 @@ class OptionsSource(StrEnum):
     NSE = "nse"        # public NSE option-chain endpoint (no key; bot-protected)
 
 
+class BrokerSource(StrEnum):
+    MOCK = "mock"
+    KITE = "kite"      # Zerodha Kite Connect holdings/margins (needs a key + token)
+
+
 class FundamentalsSource(StrEnum):
     MOCK = "mock"
     FILE = "file"      # user-supplied JSON (exact, researched)
@@ -88,6 +93,12 @@ class Settings(BaseSettings):
     # (no key; bot-protected, deploy-only); 'mock' uses a deterministic synthetic
     # chain. A fetch failure degrades to a neutral, no-signal options report.
     options_source: OptionsSource = OptionsSource.NSE
+
+    # Broker source: 'kite' (default) reads real Zerodha holdings/margins (needs
+    # kite_api_key + kite_access_token); 'mock' uses a small static portfolio.
+    # There is no key-less broker feed, so real mode falls back to mock (with a
+    # warning) when credentials are absent.
+    broker_source: BrokerSource = BrokerSource.KITE
 
     # LLM provider for debate/evidence narrative. 'mock' is deterministic and
     # offline; 'anthropic' uses Claude (requires anthropic_api_key or an
