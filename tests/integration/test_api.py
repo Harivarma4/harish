@@ -5,12 +5,14 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
+from atlas_ai.api.container import Container
 from atlas_ai.api.main import create_app
+from tests.conftest import mock_settings
 
 
 @pytest.fixture
 def client() -> TestClient:
-    return TestClient(create_app())
+    return TestClient(create_app(Container(mock_settings())))
 
 
 def test_health(client: TestClient) -> None:

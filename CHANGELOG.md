@@ -6,6 +6,12 @@ All notable changes to Project Atlas AI are documented here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **Real data is now the default.** `ATLAS_ADAPTER_MODE` defaults to `real` with
+  `ATLAS_MARKET_DATA_SOURCE=yahoo` and `ATLAS_FUNDAMENTALS_SOURCE=yahoo` (public,
+  no API key). `mock` is now opt-in and used only by the offline test suite.
+  (Macro and news still use mock feeds until their real adapters land.)
+
 ### Added
 - **Quant / factor agent** — momentum, low-volatility, mean-reversion, quality,
   and value factors computed from the price + fundamentals already in context
