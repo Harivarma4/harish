@@ -7,6 +7,12 @@ All notable changes to Project Atlas AI are documented here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Orchestration layer** — a thin coordination tier over the agent pipeline,
+  framed as CEO (research-not-advice mandate), COO (operations), and CTO
+  (readiness). New `GET /api/v1/status` reports every agent's role,
+  responsibilities, data basis (real vs mock, per source), and blend weight, so
+  the authenticity of each contribution is explicit and it's clear which agents
+  are live.
 - **Learning agent** — instrument-specific calibration from a transparent
   walk-forward self-backtest of a long-only trend rule (close above its SMA held
   a fixed horizon) over the candles in context: historical hit-rate, per-trade

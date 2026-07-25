@@ -10,6 +10,7 @@ from datetime import date, datetime
 
 from pydantic import BaseModel, Field
 
+from atlas_ai.application.orchestration.orchestrator import SystemStatus
 from atlas_ai.application.use_cases.get_index_trends import IndexTrendsResult
 from atlas_ai.application.use_cases.get_weekly_trend import TrendSummary
 from atlas_ai.domain.enums import Exchange, TimeHorizon
@@ -279,4 +280,53 @@ def to_trend_response(trend: TrendSummary) -> TrendResponse:
         sma=trend.sma,
         sessions=[SessionCloseDTO(on=s.on, close=s.close) for s in trend.sessions],
         disclaimer=trend.disclaimer,
+    )
+
+
+class AgentStatusDTO(BaseModel):
+    kind: str
+    role: str
+    responsibilities: list[str]
+    data_basis: str
+    weight: float | None = None
+    status: str
+
+
+class SystemStatusResponse(BaseModel):
+    app_name: str
+    version: str
+    adapter_mode: str
+    pipeline_version: str
+    agent_count: int
+    live_on_real_data: int
+    ceo_mandate: str
+    coo_operations: str
+    cto_readiness: str
+    readiness_notes: list[str]
+    agents: list[AgentStatusDTO]
+
+
+def to_status_response(status: SystemStatus) -> SystemStatusResponse:
+    return SystemStatusResponse(
+        app_name=status.app_name,
+        version=status.version,
+        adapter_mode=status.adapter_mode,
+        pipeline_version=status.pipeline_version,
+        agent_count=status.agent_count,
+        live_on_real_data=status.live_on_real_data,
+        ceo_mandate=status.ceo_mandate,
+        coo_operations=status.coo_operations,
+        cto_readiness=status.cto_readiness,
+        readiness_notes=list(status.readiness_notes),
+        agents=[
+            AgentStatusDTO(
+                kind=a.kind.value,
+                role=a.role,
+                responsibilities=list(a.responsibilities),
+                data_basis=a.data_basis,
+                weight=a.weight,
+                status=a.status,
+            )
+            for a in status.agents
+        ],
     )
