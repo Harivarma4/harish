@@ -10,6 +10,7 @@ from datetime import date, datetime
 
 from pydantic import BaseModel, Field
 
+from atlas_ai.application.use_cases.get_index_trends import IndexTrendsResult
 from atlas_ai.application.use_cases.get_weekly_trend import TrendSummary
 from atlas_ai.domain.enums import Exchange, TimeHorizon
 from atlas_ai.domain.recommendation import Recommendation
@@ -204,6 +205,63 @@ class TrendResponse(BaseModel):
     sma: float
     sessions: list[SessionCloseDTO]
     disclaimer: str
+
+
+class IndexTrendDTO(BaseModel):
+    key: str
+    name: str
+    symbol: str
+    as_of: date
+    direction: str
+    change_pct: float
+    last_close: float
+    week_high: float
+    week_low: float
+    sma: float
+
+
+class IndexTrendErrorDTO(BaseModel):
+    key: str
+    name: str
+    symbol: str
+    message: str
+
+
+class IndicesTrendResponse(BaseModel):
+    group: str
+    sessions: int
+    indices: list[IndexTrendDTO]
+    errors: list[IndexTrendErrorDTO]
+    disclaimer: str
+
+
+def to_indices_response(result: IndexTrendsResult) -> IndicesTrendResponse:
+    return IndicesTrendResponse(
+        group=result.group,
+        sessions=result.sessions,
+        indices=[
+            IndexTrendDTO(
+                key=t.ref.key,
+                name=t.ref.name,
+                symbol=t.ref.symbol,
+                as_of=t.summary.as_of,
+                direction=t.summary.direction,
+                change_pct=t.summary.change_pct,
+                last_close=t.summary.last_close,
+                week_high=t.summary.week_high,
+                week_low=t.summary.week_low,
+                sma=t.summary.sma,
+            )
+            for t in result.trends
+        ],
+        errors=[
+            IndexTrendErrorDTO(
+                key=e.ref.key, name=e.ref.name, symbol=e.ref.symbol, message=e.message
+            )
+            for e in result.errors
+        ],
+        disclaimer=result.disclaimer,
+    )
 
 
 def to_trend_response(trend: TrendSummary) -> TrendResponse:

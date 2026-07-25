@@ -7,6 +7,9 @@ All notable changes to Project Atlas AI are documented here. Format follows
 ## [Unreleased]
 
 ### Added
+- Multi-index trend endpoint `GET /api/v1/trend/indices?group=all|broad|sector` —
+  last-week trend for Nifty 50, Bank Nifty, Sensex, and sector indices (IT, Auto,
+  Pharma, FMCG, Metal, …) in one call, with per-index error isolation.
 - Weekly-trend endpoint `GET /api/v1/trend/{symbol}` — a factual read of the last
   ~week of price action (change %, direction, high/low, SMA, per-session closes)
   from the configured market-data source. Not a prediction.
