@@ -7,6 +7,11 @@ All notable changes to Project Atlas AI are documented here. Format follows
 ## [Unreleased]
 
 ### Added
+- Weekly-trend endpoint `GET /api/v1/trend/{symbol}` — a factual read of the last
+  ~week of price action (change %, direction, high/low, SMA, per-session closes)
+  from the configured market-data source. Not a prediction.
+- Public **Yahoo Finance fundamentals** adapter (`ATLAS_FUNDAMENTALS_SOURCE=yahoo`,
+  no API key) mapping quoteSummary onto the domain; shared `yahoo_common` module.
 - Change-management strategy (CAB-aligned): `docs/CHANGE_MANAGEMENT.md`, a PR
   template, and `CODEOWNERS` for review routing.
 
