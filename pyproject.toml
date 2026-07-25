@@ -35,6 +35,10 @@ kite = [
 anthropic = [
     "anthropic>=0.40",
 ]
+# Durable Postgres persistence. Not required for the in-memory default.
+postgres = [
+    "psycopg[binary]>=3.1",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/atlas_ai"]

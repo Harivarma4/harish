@@ -38,6 +38,11 @@ class BrokerSource(StrEnum):
     KITE = "kite"      # Zerodha Kite Connect holdings/margins (needs a key + token)
 
 
+class PersistenceBackend(StrEnum):
+    MEMORY = "memory"    # in-process, non-durable (default; used by the test suite)
+    POSTGRES = "postgres"  # durable Postgres/JSONB (needs a reachable database_url)
+
+
 class FundamentalsSource(StrEnum):
     MOCK = "mock"
     FILE = "file"      # user-supplied JSON (exact, researched)
@@ -110,6 +115,13 @@ class Settings(BaseSettings):
 
     mc_simulations: int = Field(default=10_000, ge=100)
     mc_seed: int = 42
+
+    # Persistence backend for recommendations + the audit trail. 'postgres'
+    # (default) is durable but needs a reachable `database_url` and the `psycopg`
+    # package; when either is absent the container falls back to the in-memory
+    # store (with a warning), so nothing crashes. 'memory' forces in-memory.
+    persistence_backend: PersistenceBackend = PersistenceBackend.POSTGRES
+    database_url: str = ""
 
     # Credentials (unused in mock mode); present so real adapters can read them.
     openai_api_key: str = ""

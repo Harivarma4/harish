@@ -32,6 +32,7 @@ from atlas_ai.adapters.config import (
     MarketDataSource,
     NewsSource,
     OptionsSource,
+    PersistenceBackend,
     Settings,
     load_settings,
 )
@@ -52,6 +53,12 @@ from atlas_ai.adapters.options.nse_options import NseOptions
 from atlas_ai.adapters.persistence.in_memory import (
     InMemoryAuditRepository,
     InMemoryRecommendationRepository,
+)
+from atlas_ai.adapters.persistence.postgres import (
+    PostgresAuditRepository,
+    PostgresRecommendationRepository,
+    create_schema,
+    psycopg_factory,
 )
 from atlas_ai.application.agents.behavioral_agent import BehavioralAgent
 from atlas_ai.application.agents.debate_agent import DebateAgent
@@ -134,9 +141,11 @@ class Container:
         self.llm = self._build_llm()
         self._model_version = self.llm.model_version
 
-        # Persistence singletons so GET-after-POST works within a process.
-        self.repository: RecommendationRepository = InMemoryRecommendationRepository()
-        self.audit: AuditRepository = InMemoryAuditRepository()
+        # Persistence: durable Postgres when configured, else in-memory.
+        self._persistence_is_durable = False
+        self.repository: RecommendationRepository
+        self.audit: AuditRepository
+        self.repository, self.audit = self._build_persistence()
 
         self.pipeline = ResearchPipeline(
             fundamental=FundamentalAgent(),
@@ -208,7 +217,11 @@ class Container:
             AgentKind.BEHAVIORAL: "Derived from price & volume",
             AgentKind.OPTIONS: offline if mock else options,
             AgentKind.PORTFOLIO: offline if mock else broker,
-            AgentKind.MEMORY: "Recorded recommendation history",
+            AgentKind.MEMORY: (
+                "Recorded recommendation history (Postgres)"
+                if self._persistence_is_durable
+                else "Recorded recommendation history (in-memory)"
+            ),
             AgentKind.LEARNING: "Derived from price history (backtest)",
             AgentKind.RISK: "Derived from price & volatility",
             AgentKind.DEBATE: llm,
@@ -236,6 +249,11 @@ class Container:
             notes.append(
                 "LLM narrative is the deterministic mock (Claude needs the "
                 "'anthropic' package + an API key / `ant auth login` profile)."
+            )
+        if not self._persistence_is_durable:
+            notes.append(
+                "Persistence is in-memory (non-durable); set "
+                "ATLAS_PERSISTENCE_BACKEND=postgres + ATLAS_DATABASE_URL to persist."
             )
 
         return Orchestrator(
@@ -305,6 +323,32 @@ class Container:
                 "unset: using the mock broker. Set both for real holdings."
             )
         return MockBroker()
+
+    def _build_persistence(self) -> tuple[RecommendationRepository, AuditRepository]:
+        # Postgres is durable but needs a URL + a reachable database; fall back to
+        # the in-memory store (loudly) when it is not configured or not reachable.
+        if self.settings.persistence_backend is PersistenceBackend.POSTGRES:
+            if self.settings.database_url:
+                try:
+                    connect = psycopg_factory(self.settings.database_url)
+                    create_schema(connect)  # also validates connectivity up front
+                except Exception as exc:  # noqa: BLE001 - any driver/DB failure
+                    logger.warning(
+                        "ATLAS_PERSISTENCE_BACKEND=postgres but the database is "
+                        "unavailable (%s); using the in-memory store.", exc,
+                    )
+                else:
+                    self._persistence_is_durable = True
+                    return (
+                        PostgresRecommendationRepository(connect),
+                        PostgresAuditRepository(connect),
+                    )
+            else:
+                logger.warning(
+                    "ATLAS_PERSISTENCE_BACKEND=postgres but ATLAS_DATABASE_URL is "
+                    "unset: using the in-memory store (non-durable). Set it to persist."
+                )
+        return InMemoryRecommendationRepository(), InMemoryAuditRepository()
 
     def _build_market_data(self) -> MarketDataPort:
         if self.settings.market_data_source is MarketDataSource.YAHOO:
