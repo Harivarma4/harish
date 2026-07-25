@@ -102,8 +102,9 @@ class Container:
         self.news: NewsPort
         self.options: OptionsPort
 
-        # Whether the broker is the real Kite adapter (vs the mock fallback).
+        # Whether the broker / LLM are the real adapters (vs the mock fallback).
         self._broker_is_real = False
+        self._llm_is_real = False
 
         if self.settings.adapter_mode is AdapterMode.MOCK:
             self.market_data = MockMarketData()
@@ -189,7 +190,7 @@ class Container:
         )
         llm = (
             "Claude narrative (real)"
-            if s.llm_provider is LLMProvider.ANTHROPIC
+            if self._llm_is_real
             else "deterministic mock narrative"
         )
         broker = (
@@ -231,10 +232,10 @@ class Container:
                     "Broker uses the mock adapter (set kite_api_key + "
                     "kite_access_token for real Zerodha holdings)."
                 )
-        if s.llm_provider is LLMProvider.MOCK:
+        if not self._llm_is_real:
             notes.append(
-                "LLM narrative is deterministic mock "
-                "(set ATLAS_LLM_PROVIDER=anthropic for Claude)."
+                "LLM narrative is the deterministic mock (Claude needs the "
+                "'anthropic' package + an API key / `ant auth login` profile)."
             )
 
         return Orchestrator(
@@ -247,12 +248,25 @@ class Container:
         )
 
     def _build_llm(self) -> LLMPort:
+        # Claude is the default, but it needs the `anthropic` package plus
+        # credentials (an API key or an `ant auth login` profile). When those are
+        # missing, degrade loudly to the deterministic mock so nothing crashes.
         if self.settings.llm_provider is LLMProvider.ANTHROPIC:
-            return AnthropicLLM(
-                api_key=self.settings.anthropic_api_key,
-                model=self.settings.anthropic_model,
-                max_tokens=self.settings.anthropic_max_tokens,
-            )
+            try:
+                llm = AnthropicLLM(
+                    api_key=self.settings.anthropic_api_key,
+                    model=self.settings.anthropic_model,
+                    max_tokens=self.settings.anthropic_max_tokens,
+                )
+            except Exception as exc:  # noqa: BLE001 - any SDK/credential failure
+                logger.warning(
+                    "ATLAS_LLM_PROVIDER=anthropic but Claude is unavailable (%s); "
+                    "using the deterministic mock narrative.",
+                    exc,
+                )
+            else:
+                self._llm_is_real = True
+                return llm
         return MockLLM()
 
     def _build_macro(self) -> MacroPort:

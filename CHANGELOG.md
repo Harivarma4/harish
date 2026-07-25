@@ -6,6 +6,14 @@ All notable changes to Project Atlas AI are documented here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **Claude narrative is now the default** (`ATLAS_LLM_PROVIDER=anthropic`). The
+  debate/evidence narrative uses the real Claude adapter when the `anthropic`
+  package and credentials (API key or `ant auth login` profile) are present, and
+  degrades loudly to the deterministic mock otherwise, so nothing crashes.
+  `GET /api/v1/status` reports the debate stage as real vs mock, and this was the
+  last surface still defaulting to mock — every surface now defaults to real.
+
 ### Added
 - **Real broker adapter** (`ATLAS_BROKER_SOURCE=kite`, default) — reads live
   Zerodha Kite Connect equity holdings and margins for the portfolio agent
