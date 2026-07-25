@@ -46,6 +46,7 @@ from atlas_ai.adapters.persistence.in_memory import (
     InMemoryAuditRepository,
     InMemoryRecommendationRepository,
 )
+from atlas_ai.application.agents.behavioral_agent import BehavioralAgent
 from atlas_ai.application.agents.debate_agent import DebateAgent
 from atlas_ai.application.agents.evidence_agent import EvidenceAgent
 from atlas_ai.application.agents.fundamental_agent import FundamentalAgent
@@ -121,6 +122,7 @@ class Container:
             quant=QuantAgent(),
             macro=MacroAgent(self.macro),
             news=NewsAgent(self.news),
+            behavioral=BehavioralAgent(),
             risk=RiskAgent(),
             debate=DebateAgent(self.llm),
             evidence=EvidenceAgent(),

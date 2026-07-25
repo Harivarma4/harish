@@ -6,6 +6,14 @@ All notable changes to Project Atlas AI are documented here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **Behavioral-finance agent** — contrarian market psychology read from the
+  candles already in context (no new data feed): a fear/greed index (RSI +
+  extension vs the 50-SMA), a volatility regime (short vs baseline ATR), and
+  volume herding (a volume surge into a rally is herding/caution; into a
+  sell-off is capitulation/opportunity). The prediction engine now blends 7
+  agent scores.
+
 ### Changed
 - **Real data is now the default.** `ATLAS_ADAPTER_MODE` defaults to `real` with
   `ATLAS_MARKET_DATA_SOURCE=yahoo` and `ATLAS_FUNDAMENTALS_SOURCE=yahoo` (public,

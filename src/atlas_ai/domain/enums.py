@@ -66,6 +66,7 @@ class AgentKind(StrEnum):
     QUANT = "QUANT"
     MACRO = "MACRO"
     NEWS = "NEWS"
+    BEHAVIORAL = "BEHAVIORAL"
     RISK = "RISK"
     DEBATE = "DEBATE"
     EVIDENCE = "EVIDENCE"
