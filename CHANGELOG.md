@@ -7,6 +7,11 @@ All notable changes to Project Atlas AI are documented here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Portfolio-construction agent** — judges how a candidate fits the existing
+  book (read through the broker port): Herfindahl concentration, sector exposure
+  (via a transparent static NSE sector map), and position fit (diversifying add
+  vs doubling down). An empty book is treated as a clean slate. The prediction
+  engine now blends 9 agent scores.
 - **Options / derivatives agent** — positioning and sentiment from the nearest
   option chain: put/call OI ratio (contrarian), max-pain gravitation vs spot,
   and near-money IV skew, plus ATM Greeks from real Black-Scholes math
