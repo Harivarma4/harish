@@ -20,10 +20,22 @@ def test_health(client: TestClient) -> None:
     assert client.get("/health/ready").json() == {"status": "ready"}
 
 
-def test_root_carries_disclaimer(client: TestClient) -> None:
-    body = client.get("/").json()
+def test_meta_carries_disclaimer(client: TestClient) -> None:
+    body = client.get("/api").json()
     assert "disclaimer" in body
     assert body["adapter_mode"] == "mock"
+
+
+def test_root_serves_dashboard(client: TestClient) -> None:
+    resp = client.get("/")
+    assert resp.status_code == 200
+    assert resp.headers["content-type"].startswith("text/html")
+    assert "Research console" in resp.text
+
+
+def test_static_assets_served(client: TestClient) -> None:
+    assert client.get("/app.js").status_code == 200
+    assert client.get("/styles.css").status_code == 200
 
 
 def test_create_and_fetch_recommendation(client: TestClient) -> None:

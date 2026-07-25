@@ -16,6 +16,10 @@ env/
 .coverage
 htmlcov/
 
+# Local databases (DuckDB is the default persistence backend)
+*.duckdb
+*.duckdb.wal
+
 # Env / secrets
 .env
 .env.*

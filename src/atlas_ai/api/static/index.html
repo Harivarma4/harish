@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Atlas AI — Research Console</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>📈</text></svg>">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark" aria-hidden="true"></span>
+      <div>
+        <div class="brand-name">Project Atlas AI</div>
+        <div class="brand-sub">Research console · Indian markets</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span id="mode-pill" class="pill pill-muted" title="Adapter mode">…</span>
+      <a class="link" href="/docs" target="_blank" rel="noopener">API docs ↗</a>
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle theme">◐</button>
+    </div>
+  </header>
+
+  <div class="disclaimer-strip" id="disclaimer-strip">
+    AI-generated research, <strong>not investment advice</strong>. No guarantees, no deterministic predictions.
+  </div>
+
+  <main class="wrap">
+
+    <!-- Research console -->
+    <section class="panel" aria-labelledby="research-h">
+      <div class="panel-head">
+        <h2 id="research-h">Generate research</h2>
+        <p class="panel-sub">Thirteen specialist agents debate, forecast, and assemble the evidence for one symbol.</p>
+      </div>
+
+      <form id="research-form" class="research-form">
+        <div class="field">
+          <label for="symbol">Symbol</label>
+          <input id="symbol" name="symbol" type="text" value="RELIANCE" autocomplete="off" spellcheck="false" required>
+        </div>
+        <div class="field field-sm">
+          <label for="exchange">Exchange</label>
+          <select id="exchange" name="exchange">
+            <option value="NSE" selected>NSE</option>
+            <option value="BSE">BSE</option>
+          </select>
+        </div>
+        <div class="field field-sm">
+          <label for="capital">Capital (₹)</label>
+          <input id="capital" name="capital" type="number" value="100000" min="1" step="any" required>
+        </div>
+        <div class="field field-sm">
+          <label for="horizon">Horizon</label>
+          <select id="horizon" name="time_horizon">
+            <option value="">Auto</option>
+            <option value="INTRADAY">Intraday</option>
+            <option value="SHORT_TERM">Short</option>
+            <option value="MEDIUM_TERM">Medium</option>
+            <option value="LONG_TERM">Long</option>
+          </select>
+        </div>
+        <button id="run-btn" class="btn" type="submit">Run research</button>
+      </form>
+
+      <div id="research-status" class="research-status" hidden></div>
+      <div id="result" class="result" aria-live="polite"></div>
+    </section>
+
+    <!-- Agent fleet -->
+    <section class="panel" aria-labelledby="fleet-h">
+      <div class="panel-head">
+        <h2 id="fleet-h">Agent fleet</h2>
+        <p class="panel-sub">Every agent's role, blend weight, and the authenticity of its data — real feed vs mock.</p>
+      </div>
+      <div id="fleet-summary" class="fleet-summary"></div>
+      <div id="fleet" class="fleet"></div>
+    </section>
+
+    <!-- Index trends -->
+    <section class="panel" aria-labelledby="trends-h">
+      <div class="panel-head">
+        <h2 id="trends-h">Index trends</h2>
+        <p class="panel-sub">Factual recent price action across the broad and sector indices. History, not a prediction.</p>
+      </div>
+      <div id="trends" class="trends"></div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p id="footer-disclaimer"></p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

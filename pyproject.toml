@@ -47,6 +47,8 @@ postgres = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/atlas_ai"]
+# Ship the dashboard's static assets (non-Python files) in the wheel.
+artifacts = ["src/atlas_ai/api/static/*"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

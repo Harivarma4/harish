@@ -54,7 +54,11 @@ make check                 # ruff + mypy + bandit + pytest
 make run                   # uvicorn on http://localhost:8000
 ```
 
-Generate a recommendation:
+Then open the **dashboard** at <http://localhost:8000/> — a web console to
+generate research, inspect every agent's contribution, view the agent fleet
+(real-vs-mock data authenticity), and see index trends.
+
+Or drive the API directly:
 
 ```bash
 curl -s -X POST http://localhost:8000/api/v1/recommendations \
@@ -62,7 +66,7 @@ curl -s -X POST http://localhost:8000/api/v1/recommendations \
   -d '{"symbol":"RELIANCE","exchange":"NSE","capital":100000}' | jq
 ```
 
-Interactive API docs: <http://localhost:8000/docs>.
+Interactive API docs: <http://localhost:8000/docs> · JSON meta: `/api`.
 
 ### Docker
 
