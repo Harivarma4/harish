@@ -2,12 +2,17 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 from atlas_ai import __version__
 from atlas_ai.api.container import Container
 from atlas_ai.api.routes import health, recommendations, status, trend
 from atlas_ai.domain.recommendation import DISCLAIMER
+
+_STATIC_DIR = Path(__file__).parent / "static"
 
 
 def create_app(container: Container | None = None) -> FastAPI:
@@ -27,8 +32,8 @@ def create_app(container: Container | None = None) -> FastAPI:
     app.include_router(trend.router)
     app.include_router(status.router)
 
-    @app.get("/", tags=["meta"])
-    def root() -> dict[str, str]:
+    @app.get("/api", tags=["meta"])
+    def meta() -> dict[str, str]:
         return {
             "name": container.settings.app_name,
             "version": __version__,
@@ -36,6 +41,11 @@ def create_app(container: Container | None = None) -> FastAPI:
             "disclaimer": DISCLAIMER,
             "docs": "/docs",
         }
+
+    # The dashboard (static SPA) is served at the root. Mounted last so the API
+    # routers, /docs, and /openapi.json take precedence; everything else falls
+    # through to the static files, with index.html at "/".
+    app.mount("/", StaticFiles(directory=_STATIC_DIR, html=True), name="dashboard")
 
     return app
 

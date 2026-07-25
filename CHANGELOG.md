@@ -7,6 +7,16 @@ All notable changes to Project Atlas AI are documented here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Frontend dashboard** — a self-contained web console served by the API itself
+  at `/` (no build step, no JS framework; vanilla HTML/CSS/JS calling the same
+  REST endpoints). It has a research form that renders the full recommendation
+  (action, confidence, probabilistic outlook, trade plan, every agent's score
+  and lead signal, evidence and counter-arguments, governance), an agent-fleet
+  panel showing each agent's role/weight and real-vs-mock data authenticity, and
+  an index-trends panel. Light/dark themed. The JSON meta that used to live at
+  `/` moved to `/api`; `/docs` (Swagger) is unchanged.
+
+### Added
 - **DuckDB storage backend, now the default** (`ATLAS_PERSISTENCE_BACKEND=duckdb`)
   — durable, embedded, file-based persistence with **no server**, giving
   zero-infrastructure durability out of the box. It reuses the JSONB serializer,
