@@ -7,6 +7,11 @@ All notable changes to Project Atlas AI are documented here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Memory agent** — an institutional-memory prior from past recommendations on
+  the same instrument (read through the recommendation repository): a
+  recency-weighted mean of prior directional calls plus a view-stability read.
+  Realized win/loss is left to the learning agent; with no prior coverage it is
+  neutral. The prediction engine now blends 10 agent scores.
 - **Portfolio-construction agent** — judges how a candidate fits the existing
   book (read through the broker port): Herfindahl concentration, sector exposure
   (via a transparent static NSE sector map), and position fit (diversifying add

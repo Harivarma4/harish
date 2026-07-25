@@ -69,6 +69,7 @@ class AgentKind(StrEnum):
     BEHAVIORAL = "BEHAVIORAL"
     OPTIONS = "OPTIONS"
     PORTFOLIO = "PORTFOLIO"
+    MEMORY = "MEMORY"
     RISK = "RISK"
     DEBATE = "DEBATE"
     EVIDENCE = "EVIDENCE"

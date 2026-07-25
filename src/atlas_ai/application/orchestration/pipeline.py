@@ -1,6 +1,7 @@
 """ResearchPipeline — wires the agents into the end-to-end research flow.
 
-    data → [fundamental, technical, quant, macro, news, behavioral, options, portfolio]
+    data → [fundamental, technical, quant, macro, news, behavioral, options,
+            portfolio, memory]
          → risk → debate → prediction → evidence
 
 The pipeline produces a structured result; turning that result into a persisted
@@ -18,6 +19,7 @@ from atlas_ai.application.agents.debate_agent import DebateAgent
 from atlas_ai.application.agents.evidence_agent import EvidenceAgent, EvidenceBundle
 from atlas_ai.application.agents.fundamental_agent import FundamentalAgent
 from atlas_ai.application.agents.macro_agent import MacroAgent
+from atlas_ai.application.agents.memory_agent import MemoryAgent
 from atlas_ai.application.agents.news_agent import NewsAgent
 from atlas_ai.application.agents.options_agent import OptionsAgent
 from atlas_ai.application.agents.portfolio_agent import PortfolioAgent
@@ -57,13 +59,15 @@ class ResearchPipeline:
         behavioral: BehavioralAgent,
         options: OptionsAgent,
         portfolio: PortfolioAgent,
+        memory: MemoryAgent,
         risk: RiskAgent,
         debate: DebateAgent,
         evidence: EvidenceAgent,
         prediction: PredictionEngine,
     ) -> None:
         self._graph = AgentGraph(
-            [fundamental, technical, quant, macro, news, behavioral, options, portfolio]
+            [fundamental, technical, quant, macro, news, behavioral, options,
+             portfolio, memory]
         )
         self._risk = risk
         self._debate = debate
@@ -72,7 +76,7 @@ class ResearchPipeline:
 
     def run(self, ctx: AgentContext, *, horizon_days: int) -> PipelineResult:
         # 1. Analysis agents (fundamental, technical, quant, macro, news,
-        #    behavioral, options, portfolio) run first.
+        #    behavioral, options, portfolio, memory) run first.
         reports = self._graph.run(ctx)
 
         # 2. Risk plan, and fold its report into the analytical set.
