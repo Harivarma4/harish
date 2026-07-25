@@ -17,6 +17,7 @@ from atlas_ai.domain.evidence import Evidence, Source
 _SOURCES = {
     AgentKind.FUNDAMENTAL: Source("Atlas fundamental engine", 0.85),
     AgentKind.TECHNICAL: Source("Atlas technical engine", 0.7),
+    AgentKind.MACRO: Source("Atlas macro engine", 0.75),
     AgentKind.RISK: Source("Atlas risk model", 0.8),
 }
 

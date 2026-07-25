@@ -7,6 +7,10 @@ All notable changes to Project Atlas AI are documented here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Macro agent** — top-down analysis of rates, inflation, GDP growth, 10Y yield,
+  rupee, crude, FII flows, and global markets, contributing a market-wide macro
+  score/signals to every recommendation (via a new `MacroPort` + mock adapter).
+  The prediction engine now blends 4 agent scores (fundamental/technical/macro/risk).
 - Multi-index trend endpoint `GET /api/v1/trend/indices?group=all|broad|sector` —
   last-week trend for Nifty 50, Bank Nifty, Sensex, and sector indices (IT, Auto,
   Pharma, FMCG, Metal, …) in one call, with per-index error isolation.

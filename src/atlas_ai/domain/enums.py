@@ -63,6 +63,7 @@ class AgentKind(StrEnum):
 
     FUNDAMENTAL = "FUNDAMENTAL"
     TECHNICAL = "TECHNICAL"
+    MACRO = "MACRO"
     RISK = "RISK"
     DEBATE = "DEBATE"
     EVIDENCE = "EVIDENCE"

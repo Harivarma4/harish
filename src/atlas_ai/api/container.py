@@ -33,6 +33,7 @@ from atlas_ai.adapters.fundamentals.mock_fundamentals import MockFundamentals
 from atlas_ai.adapters.fundamentals.yahoo_fundamentals import YahooFundamentals
 from atlas_ai.adapters.llm.anthropic_llm import AnthropicLLM
 from atlas_ai.adapters.llm.mock_llm import MockLLM
+from atlas_ai.adapters.macro.mock_macro import MockMacro
 from atlas_ai.adapters.market_data.kite_market_data import KiteMarketData
 from atlas_ai.adapters.market_data.mock_market_data import MockMarketData
 from atlas_ai.adapters.market_data.yahoo_market_data import YahooMarketData
@@ -43,12 +44,14 @@ from atlas_ai.adapters.persistence.in_memory import (
 from atlas_ai.application.agents.debate_agent import DebateAgent
 from atlas_ai.application.agents.evidence_agent import EvidenceAgent
 from atlas_ai.application.agents.fundamental_agent import FundamentalAgent
+from atlas_ai.application.agents.macro_agent import MacroAgent
 from atlas_ai.application.agents.risk_agent import RiskAgent
 from atlas_ai.application.agents.technical_agent import TechnicalAgent
 from atlas_ai.application.orchestration.pipeline import ResearchPipeline
 from atlas_ai.application.ports.broker import BrokerPort
 from atlas_ai.application.ports.fundamentals import FundamentalsPort
 from atlas_ai.application.ports.llm import LLMPort
+from atlas_ai.application.ports.macro import MacroPort
 from atlas_ai.application.ports.market_data import MarketDataPort
 from atlas_ai.application.ports.repositories import (
     AuditRepository,
@@ -72,6 +75,8 @@ class Container:
         self.market_data: MarketDataPort
         self.fundamentals: FundamentalsPort
         self.broker: BrokerPort
+        # Macro is market-wide; a real feed is a later phase, mock for now.
+        self.macro: MacroPort = MockMacro()
 
         if self.settings.adapter_mode is AdapterMode.MOCK:
             self.market_data = MockMarketData()
@@ -99,6 +104,7 @@ class Container:
         self.pipeline = ResearchPipeline(
             fundamental=FundamentalAgent(),
             technical=TechnicalAgent(),
+            macro=MacroAgent(self.macro),
             risk=RiskAgent(),
             debate=DebateAgent(self.llm),
             evidence=EvidenceAgent(),
