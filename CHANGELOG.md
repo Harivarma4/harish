@@ -10,7 +10,12 @@ All notable changes to Project Atlas AI are documented here. Format follows
 - **Real data is now the default.** `ATLAS_ADAPTER_MODE` defaults to `real` with
   `ATLAS_MARKET_DATA_SOURCE=yahoo` and `ATLAS_FUNDAMENTALS_SOURCE=yahoo` (public,
   no API key). `mock` is now opt-in and used only by the offline test suite.
-  (Macro and news still use mock feeds until their real adapters land.)
+
+### Added
+- **Real macro adapter** (`ATLAS_MACRO_SOURCE=yahoo`, default) — live rupee
+  (`INR=X`), Brent crude (`BZ=F`), and a global-equity proxy (`^GSPC`) from Yahoo,
+  combined with official RBI/MOSPI/NSE figures from config (repo, CPI, GDP, 10Y,
+  FII). Macro is now real by default; only news remains a mock feed.
 
 ### Added
 - **Quant / factor agent** — momentum, low-volatility, mean-reversion, quality,

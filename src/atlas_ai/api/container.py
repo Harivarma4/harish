@@ -24,6 +24,7 @@ from atlas_ai.adapters.config import (
     AdapterMode,
     FundamentalsSource,
     LLMProvider,
+    MacroSource,
     MarketDataSource,
     Settings,
     load_settings,
@@ -34,6 +35,7 @@ from atlas_ai.adapters.fundamentals.yahoo_fundamentals import YahooFundamentals
 from atlas_ai.adapters.llm.anthropic_llm import AnthropicLLM
 from atlas_ai.adapters.llm.mock_llm import MockLLM
 from atlas_ai.adapters.macro.mock_macro import MockMacro
+from atlas_ai.adapters.macro.yahoo_macro import YahooMacro
 from atlas_ai.adapters.market_data.kite_market_data import KiteMarketData
 from atlas_ai.adapters.market_data.mock_market_data import MockMarketData
 from atlas_ai.adapters.market_data.yahoo_market_data import YahooMarketData
@@ -79,24 +81,27 @@ class Container:
         self.market_data: MarketDataPort
         self.fundamentals: FundamentalsPort
         self.broker: BrokerPort
-        # Macro is market-wide; a real feed is a later phase, mock for now.
-        self.macro: MacroPort = MockMacro()
-        # News sentiment; a real feed + NLP model is a later phase, mock for now.
-        self.news: NewsPort = MockNews()
+        self.macro: MacroPort
+        self.news: NewsPort
 
         if self.settings.adapter_mode is AdapterMode.MOCK:
             self.market_data = MockMarketData()
             self.fundamentals = MockFundamentals()
             self.broker = MockBroker()
+            self.macro = MockMacro()
+            self.news = MockNews()
         else:
             self.market_data = self._build_market_data()
             self.fundamentals = self._build_fundamentals()
-            # A real broker adapter is not built yet; use the mock and say so.
+            self.macro = self._build_macro()
+            # A real broker adapter is not built yet; news real feed is pending.
             logger.warning(
-                "ATLAS_ADAPTER_MODE=real: market data is LIVE (%s); "
-                "broker still uses the mock adapter (real one not built yet).",
+                "ATLAS_ADAPTER_MODE=real: market data LIVE (%s), macro (%s); "
+                "news and broker still use mock adapters (real ones pending).",
                 self.settings.market_data_source.value,
+                self.settings.macro_source.value,
             )
+            self.news = MockNews()
             self.broker = MockBroker()
 
         # The LLM is chosen independently of the market-data adapter mode.
@@ -129,6 +134,17 @@ class Container:
                 max_tokens=self.settings.anthropic_max_tokens,
             )
         return MockLLM()
+
+    def _build_macro(self) -> MacroPort:
+        if self.settings.macro_source is MacroSource.YAHOO:
+            return YahooMacro(
+                repo_rate_pct=self.settings.macro_repo_rate_pct,
+                cpi_inflation_pct=self.settings.macro_cpi_inflation_pct,
+                gdp_growth_pct=self.settings.macro_gdp_growth_pct,
+                india_10y_yield_pct=self.settings.macro_india_10y_yield_pct,
+                fii_flow_cr=self.settings.macro_fii_flow_cr,
+            )
+        return MockMacro()
 
     def _build_market_data(self) -> MarketDataPort:
         if self.settings.market_data_source is MarketDataSource.YAHOO:
