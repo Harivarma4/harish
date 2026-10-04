@@ -6,7 +6,7 @@ claude.ai data export.
 
 ## Layout
 
-- `CLAUDE_CONTEXT.md` — persistent memory that links Claude sessions. Read it first
+- `CLAUDE_CONTEXT.md` — persistent memory that links Claude sessions (recovered from the export on 2026-10-04). Read it first
   in every new session; update it whenever a requirement, decision,
   implementation or bug changes.
 - `export/` — drop the claude.ai export zips here (`conversations-000.zip`,
