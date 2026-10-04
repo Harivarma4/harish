@@ -293,7 +293,14 @@ See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **
       Q4 migration 0005_q4_operations: schedules, alert_channels, alert_deliveries, reconciliation_specs, reconciliation_runs + job_tasks.heartbeat_at/retry_at;
       also tenants, users, secrets, audit_events, templates, uploads). Copies + PNG previews in `q4-road-map/drafts/`.
       Also prepared locally (unpublished): "built" wording on ing-architecture, current, ing-reuse, evolution, ing-phases, nov, onepager.
-      On publish: re-read project/deck.json, insert ing-jobstore + ing-tables after ing-ui.
+      On publish: re-read project/deck.json, insert ing-jobstore + ing-tables + ing-erd after ing-ui.
+      ADDED 4 Oct (Harish: "I want ERD of this table... the Postgres table structure with the ERDs as well as draft slide"):
+      IMPLEMENTED in `q4-road-map/drafts/`: `jobstore_schema.sql` (complete PostgreSQL DDL, 21 tables = 16 in code + 5 from 0005,
+      19 FKs, 68 indexes; loaded into PostgreSQL 16 without errors), `jobstore_erd.md` (Mermaid erDiagram, every column; GitLab renders it),
+      `jobstore_erd_full.png/.svg` (rendered), and slide 10e `ing-erd.html` + `erd_preview.png` (crow's-foot ERD, keys only,
+      Q4 POC tables orange). NOT published to the deck; awaiting OK. Facts from the models: JSONVariant = JSONB on PostgreSQL;
+      tenant_id is a real FK only on users; there are no FKs on audit_events/uploads/templates/secrets; reconciliation_specs has
+      UNIQUE(pipeline_object_id) uq_recon_object; migration 0005 creates columns nullable (model says NOT NULL) = minor drift.
       Noted, not changed: ing-reuse says "no server-side auth" but code has JWT + five RBAC roles.
 
 - [ ] Apply `q4-poc` when the PC is linked (or Harish follows `APPLY.md`).
@@ -361,6 +368,7 @@ See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **
 - **Current state:** doc at rev 4 with pending blocks `mxjja2hcr0m.324` (Presidio & adopters), `.325` (Where we stand),
   `.326` (Partner view), `.327` (Sources). Verified readable from this session (2026-10-04).
 - **Remaining work:** the §18 backlog (guide finished in the recovery session).
+- **Latest (4 Oct):** job-store ERD + full PostgreSQL DDL + draft slide 10e prepared in drafts/; awaiting Harish's OK to publish 10c/10d/10e.
 - **Next action:** see §24.
 
 ## 24. IMMEDIATE NEXT ACTION

@@ -1,0 +1,171 @@
+<section id="ing-erd" data-transition="fade" style="background:#F4F1EA; color:#16222F; font-family:'IBM Plex Sans', sans-serif; padding:96px 128px 160px; display:flex; flex-direction:column; gap:24px">
+  <div style="display:flex; flex-direction:column; gap:16px">
+    <p style="font-family:'IBM Plex Mono', monospace; font-size:24px; font-weight:500; color:#0E7466; letter-spacing:2px; text-transform:uppercase">Initiative 1 · Job store ERD</p>
+    <h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#16222F">21 PostgreSQL tables, built around the pipeline</h2>
+  </div>
+  <svg aria-label="Entity relationship diagram of the 21 job store tables. A pipeline belongs to one connection and one target, has many pipeline objects, and has many jobs; a job has many tasks, one per pipeline object, and many events and metrics; a task has many validation results. Watermarks hold one value per pipeline object. The Q4 POC adds one optional schedule per pipeline, reconciliation specs and runs against the legacy output, and alert channels with their deliveries. audit_events, uploads, templates and secrets have no foreign keys." viewBox="0 0 1664 700" style="width:1664px; height:700px" font-family="IBM Plex Sans, sans-serif">
+    <defs>
+      <marker id="e-one" viewBox="-30 -14 32 28" refX="0" refY="0" markerWidth="32" markerHeight="28" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M-9 -11V11M-17 -11V11" stroke="#16222F" stroke-width="2.5" fill="none"/></marker>
+      <marker id="e-zone" viewBox="-30 -14 32 28" refX="0" refY="0" markerWidth="32" markerHeight="28" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M-9 -11V11" stroke="#16222F" stroke-width="2.5" fill="none"/><circle cx="-21" cy="0" r="6" fill="#F4F1EA" stroke="#16222F" stroke-width="2.5"/></marker>
+      <marker id="e-many" viewBox="-30 -14 32 28" refX="0" refY="0" markerWidth="32" markerHeight="28" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M-14 0L0 -11M-14 0L0 0M-14 0L0 11" stroke="#16222F" stroke-width="2.5" fill="none"/><circle cx="-21" cy="0" r="6" fill="#F4F1EA" stroke="#16222F" stroke-width="2.5"/></marker>
+    </defs>
+    <g font-size="18" fill="#16222F">
+      <path d="M8 22H48" stroke="#16222F" stroke-width="2.5" marker-end="url(#e-one)"/><text x="58" y="28">exactly one</text>
+      <path d="M180 22H220" stroke="#16222F" stroke-width="2.5" marker-end="url(#e-many)"/><text x="230" y="28">zero or many</text>
+      <path d="M8 62H48" stroke="#16222F" stroke-width="2.5" marker-end="url(#e-zone)"/><text x="58" y="68">zero or one</text>
+      <rect x="180" y="52" width="18" height="18" rx="4" fill="#F3E4D6" stroke="#9A4F16" stroke-width="2"/><text x="208" y="68">Q4 POC (0005)</text>
+    </g>
+        <path d="M441 170L395 170L395 137L340 137" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-many)" marker-end="url(#e-one)"/>
+    <path d="M441 200L375 200L375 241L340 241" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-many)" marker-end="url(#e-one)"/>
+    <path d="M170 330L170 278" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-many)" marker-end="url(#e-one)"/>
+    <path d="M340 350L441 350" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-zone)" marker-end="url(#e-one)"/>
+    <path d="M340 420L415 420L415 232L441 232" fill="none" stroke="#F4F1EA" stroke-width="12"/>
+    <path d="M340 420L415 420L415 232L441 232" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-many)" marker-end="url(#e-one)"/>
+    <path d="M170 510L170 456" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-many)" marker-end="url(#e-one)"/>
+    <path d="M611 100L611 150" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-zone)" marker-end="url(#e-one)"/>
+    <path d="M611 300L611 250" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-many)" marker-end="url(#e-one)"/>
+    <path d="M611 450L611 400" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-zone)" marker-end="url(#e-one)"/>
+    <path d="M882 185L781 185" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-many)" marker-end="url(#e-one)"/>
+    <path d="M882 330L781 330" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-many)" marker-end="url(#e-one)"/>
+    <path d="M781 500L840 500L840 230L781 230" fill="none" stroke="#F4F1EA" stroke-width="12"/>
+    <path d="M781 500L840 500L840 230L781 230" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-many)" marker-end="url(#e-one)"/>
+    <path d="M1052 270L1052 220" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-many)" marker-end="url(#e-one)"/>
+    <path d="M1052 600L1052 550" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-many)" marker-end="url(#e-one)"/>
+    <path d="M1324 77L1273 77L1273 140L1222 140" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-many)" marker-end="url(#e-one)"/>
+    <path d="M1324 185L1222 185" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-many)" marker-end="url(#e-one)"/>
+    <path d="M1324 232L1273 232L1273 290L1222 290" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-many)" marker-end="url(#e-zone)"/>
+    <path d="M1324 337L1222 337" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-many)" marker-end="url(#e-one)"/>
+    <path d="M1494 600L1494 544" fill="none" stroke="#16222F" stroke-width="2.5" marker-start="url(#e-many)" marker-end="url(#e-one)"/>
+    <rect x="0" y="100" width="340" height="74" rx="10" fill="#FBFAF6" stroke="#0E7466" stroke-width="2"/>
+    <path d="M1 140V110a9 9 0 0 1 9-9H330a9 9 0 0 1 9 9V140z" fill="#E0EFEC"/>
+    <line x1="0" y1="140" x2="340" y2="140" stroke="#0E7466" stroke-width="1.5"/>
+    <text x="16" y="128" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">connections</text>
+    <text x="16" y="162" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">credential_ref</text>
+    <rect x="0" y="204" width="340" height="74" rx="10" fill="#FBFAF6" stroke="#0E7466" stroke-width="2"/>
+    <path d="M1 244V214a9 9 0 0 1 9-9H330a9 9 0 0 1 9 9V244z" fill="#E0EFEC"/>
+    <line x1="0" y1="244" x2="340" y2="244" stroke="#0E7466" stroke-width="1.5"/>
+    <text x="16" y="232" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">targets</text>
+    <text x="16" y="266" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">type s3·sftp·gcs·azure</text>
+    <rect x="0" y="330" width="340" height="126" rx="10" fill="#FBFAF6" stroke="#9A4F16" stroke-width="2"/>
+    <path d="M1 370V340a9 9 0 0 1 9-9H330a9 9 0 0 1 9 9V370z" fill="#F3E4D6"/>
+    <line x1="0" y1="370" x2="340" y2="370" stroke="#9A4F16" stroke-width="1.5"/>
+    <text x="16" y="358" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">reconciliation_specs</text>
+    <text x="16" y="392" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">pipeline_id</text>
+    <text x="326" y="392" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK</text>
+    <text x="16" y="418" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">pipeline_object_id</text>
+    <text x="326" y="418" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK·UK</text>
+    <text x="16" y="444" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">legacy_target_id</text>
+    <text x="326" y="444" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK</text>
+    <rect x="0" y="510" width="340" height="100" rx="10" fill="#FBFAF6" stroke="#9A4F16" stroke-width="2"/>
+    <path d="M1 550V520a9 9 0 0 1 9-9H330a9 9 0 0 1 9 9V550z" fill="#F3E4D6"/>
+    <line x1="0" y1="550" x2="340" y2="550" stroke="#9A4F16" stroke-width="1.5"/>
+    <text x="16" y="538" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">reconciliation_runs</text>
+    <text x="16" y="572" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">spec_id</text>
+    <text x="326" y="572" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK</text>
+    <text x="16" y="598" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">job_id, pipeline_id</text>
+    <text x="326" y="598" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">no FK</text>
+    <rect x="441" y="0" width="340" height="100" rx="10" fill="#FBFAF6" stroke="#9A4F16" stroke-width="2"/>
+    <path d="M442 40V10a9 9 0 0 1 9-9H771a9 9 0 0 1 9 9V40z" fill="#F3E4D6"/>
+    <line x1="441" y1="40" x2="781" y2="40" stroke="#9A4F16" stroke-width="1.5"/>
+    <text x="457" y="28" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">schedules</text>
+    <text x="457" y="62" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">pipeline_id</text>
+    <text x="767" y="62" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK·UK</text>
+    <text x="457" y="88" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">cron, next_run_at</text>
+    <rect x="441" y="150" width="340" height="100" rx="10" fill="#FBFAF6" stroke="#0E7466" stroke-width="2"/>
+    <path d="M442 190V160a9 9 0 0 1 9-9H771a9 9 0 0 1 9 9V190z" fill="#E0EFEC"/>
+    <line x1="441" y1="190" x2="781" y2="190" stroke="#0E7466" stroke-width="1.5"/>
+    <text x="457" y="178" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">pipelines</text>
+    <text x="457" y="212" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">connection_id</text>
+    <text x="767" y="212" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK</text>
+    <text x="457" y="238" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">target_id</text>
+    <text x="767" y="238" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK</text>
+    <rect x="441" y="300" width="340" height="100" rx="10" fill="#FBFAF6" stroke="#0E7466" stroke-width="2"/>
+    <path d="M442 340V310a9 9 0 0 1 9-9H771a9 9 0 0 1 9 9V340z" fill="#E0EFEC"/>
+    <line x1="441" y1="340" x2="781" y2="340" stroke="#0E7466" stroke-width="1.5"/>
+    <text x="457" y="328" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">pipeline_objects</text>
+    <text x="457" y="362" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">pipeline_id</text>
+    <text x="767" y="362" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK</text>
+    <text x="457" y="388" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">(pipeline_id, object_key)</text>
+    <text x="767" y="388" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">UK</text>
+    <rect x="441" y="450" width="340" height="100" rx="10" fill="#FBFAF6" stroke="#0E7466" stroke-width="2"/>
+    <path d="M442 490V460a9 9 0 0 1 9-9H771a9 9 0 0 1 9 9V490z" fill="#E0EFEC"/>
+    <line x1="441" y1="490" x2="781" y2="490" stroke="#0E7466" stroke-width="1.5"/>
+    <text x="457" y="478" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">watermarks</text>
+    <text x="457" y="512" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">pipeline_id</text>
+    <text x="767" y="512" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK</text>
+    <text x="457" y="538" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">pipeline_object_id</text>
+    <text x="767" y="538" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK·UK</text>
+    <rect x="882" y="120" width="340" height="100" rx="10" fill="#FBFAF6" stroke="#0E7466" stroke-width="2"/>
+    <path d="M883 160V130a9 9 0 0 1 9-9H1212a9 9 0 0 1 9 9V160z" fill="#E0EFEC"/>
+    <line x1="882" y1="160" x2="1222" y2="160" stroke="#0E7466" stroke-width="1.5"/>
+    <text x="898" y="148" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">jobs</text>
+    <text x="898" y="182" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">pipeline_id</text>
+    <text x="1208" y="182" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK</text>
+    <text x="898" y="208" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">job_number</text>
+    <text x="1208" y="208" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">UK</text>
+    <rect x="882" y="270" width="340" height="152" rx="10" fill="#FBFAF6" stroke="#0E7466" stroke-width="2"/>
+    <path d="M883 310V280a9 9 0 0 1 9-9H1212a9 9 0 0 1 9 9V310z" fill="#E0EFEC"/>
+    <line x1="882" y1="310" x2="1222" y2="310" stroke="#0E7466" stroke-width="1.5"/>
+    <text x="898" y="298" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">job_tasks</text>
+    <text x="898" y="332" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">job_id</text>
+    <text x="1208" y="332" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK</text>
+    <text x="898" y="358" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">pipeline_object_id</text>
+    <text x="1208" y="358" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK</text>
+    <text x="898" y="384" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">status, attempt</text>
+    <text x="898" y="410" font-family="IBM Plex Mono, monospace" font-size="18" fill="#9A4F16">heartbeat_at, retry_at</text>
+    <text x="1208" y="410" text-anchor="end" font-size="17" font-weight="600" fill="#9A4F16">Q4</text>
+    <rect x="882" y="476" width="340" height="74" rx="10" fill="#FBFAF6" stroke="#0E7466" stroke-width="2"/>
+    <path d="M883 516V486a9 9 0 0 1 9-9H1212a9 9 0 0 1 9 9V516z" fill="#E0EFEC"/>
+    <line x1="882" y1="516" x2="1222" y2="516" stroke="#0E7466" stroke-width="1.5"/>
+    <text x="898" y="504" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">tenants</text>
+    <text x="898" y="538" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">slug</text>
+    <text x="1208" y="538" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">UK</text>
+    <rect x="882" y="600" width="340" height="100" rx="10" fill="#FBFAF6" stroke="#0E7466" stroke-width="2"/>
+    <path d="M883 640V610a9 9 0 0 1 9-9H1212a9 9 0 0 1 9 9V640z" fill="#E0EFEC"/>
+    <line x1="882" y1="640" x2="1222" y2="640" stroke="#0E7466" stroke-width="1.5"/>
+    <text x="898" y="628" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">users</text>
+    <text x="898" y="662" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">tenant_id</text>
+    <text x="1208" y="662" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK</text>
+    <text x="898" y="688" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">email</text>
+    <text x="1208" y="688" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">UK</text>
+    <rect x="1324" y="40" width="340" height="74" rx="10" fill="#FBFAF6" stroke="#0E7466" stroke-width="2"/>
+    <path d="M1325 80V50a9 9 0 0 1 9-9H1654a9 9 0 0 1 9 9V80z" fill="#E0EFEC"/>
+    <line x1="1324" y1="80" x2="1664" y2="80" stroke="#0E7466" stroke-width="1.5"/>
+    <text x="1340" y="68" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">job_metrics</text>
+    <text x="1340" y="102" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">job_id</text>
+    <text x="1650" y="102" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK</text>
+    <rect x="1324" y="150" width="340" height="100" rx="10" fill="#FBFAF6" stroke="#0E7466" stroke-width="2"/>
+    <path d="M1325 190V160a9 9 0 0 1 9-9H1654a9 9 0 0 1 9 9V190z" fill="#E0EFEC"/>
+    <line x1="1324" y1="190" x2="1664" y2="190" stroke="#0E7466" stroke-width="1.5"/>
+    <text x="1340" y="178" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">job_events</text>
+    <text x="1340" y="212" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">job_id</text>
+    <text x="1650" y="212" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK</text>
+    <text x="1340" y="238" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">job_task_id</text>
+    <text x="1650" y="238" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK null</text>
+    <rect x="1324" y="300" width="340" height="74" rx="10" fill="#FBFAF6" stroke="#0E7466" stroke-width="2"/>
+    <path d="M1325 340V310a9 9 0 0 1 9-9H1654a9 9 0 0 1 9 9V340z" fill="#E0EFEC"/>
+    <line x1="1324" y1="340" x2="1664" y2="340" stroke="#0E7466" stroke-width="1.5"/>
+    <text x="1340" y="328" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">validation_results</text>
+    <text x="1340" y="362" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">job_task_id</text>
+    <text x="1650" y="362" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK</text>
+    <rect x="1324" y="470" width="340" height="74" rx="10" fill="#FBFAF6" stroke="#9A4F16" stroke-width="2"/>
+    <path d="M1325 510V480a9 9 0 0 1 9-9H1654a9 9 0 0 1 9 9V510z" fill="#F3E4D6"/>
+    <line x1="1324" y1="510" x2="1664" y2="510" stroke="#9A4F16" stroke-width="1.5"/>
+    <text x="1340" y="498" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">alert_channels</text>
+    <text x="1340" y="532" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">kind teams | slack</text>
+    <rect x="1324" y="600" width="340" height="100" rx="10" fill="#FBFAF6" stroke="#9A4F16" stroke-width="2"/>
+    <path d="M1325 640V610a9 9 0 0 1 9-9H1654a9 9 0 0 1 9 9V640z" fill="#F3E4D6"/>
+    <line x1="1324" y1="640" x2="1664" y2="640" stroke="#9A4F16" stroke-width="1.5"/>
+    <text x="1340" y="628" font-family="IBM Plex Mono, monospace" font-size="21" font-weight="500" fill="#16222F">alert_deliveries</text>
+    <text x="1340" y="662" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">channel_id</text>
+    <text x="1650" y="662" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">FK</text>
+    <text x="1340" y="688" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">dedupe_key</text>
+    <text x="1650" y="688" text-anchor="end" font-size="17" font-weight="600" fill="#56606B">UK</text>
+    <rect x="441" y="600" width="340" height="98" rx="10" fill="#FBFAF6" stroke="#8A929A" stroke-width="2" stroke-dasharray="8 6"/>
+    <text x="457" y="628" font-size="19" font-weight="600" fill="#56606B">No foreign keys</text>
+    <text x="457" y="658" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">audit_events · uploads</text>
+    <text x="457" y="684" font-family="IBM Plex Mono, monospace" font-size="18" fill="#16222F">templates · secrets</text>
+  </svg>
+  <p style="position:absolute; left:128px; bottom:64px; width:1664px; font-size:24px; color:#56606B">Data Platform Roadmap · 10e</p>
+  <aside>This is the full entity relationship diagram of the job store, all 21 tables. Read it from the pipeline in the middle. A pipeline belongs to one connection, the source, and one target, where the files land. It has many pipeline objects, one per table or file it moves. Every run is a job, and a job has one task per pipeline object; that task is the unit a worker claims, and it carries the attempt number used for fencing. Events, metrics and validation results hang off jobs and tasks, so every run can be explained afterwards. Watermarks keep one value per object, for incremental loads. The orange tables came with the Q4 proof of concept in migration 0005: one optional schedule per pipeline, reconciliation specs and runs that compare our output with the legacy files, and alert channels with a delivery log whose unique dedupe key means one failure sends one alert. Two things to note: tenant_id is on every table but is a real foreign key only on users, so tenant isolation is enforced by the API, and audit_events, uploads, templates and secrets have no foreign keys. Secrets is in the code but not used in Q4; credentials come from environment variables. The complete PostgreSQL definition, with every column, type, index and constraint, is in jobstore_schema.sql.</aside>
+</section>
