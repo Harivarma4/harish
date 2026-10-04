@@ -277,9 +277,17 @@ See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **
       PII-16 → FX.2, moscow::wont-q4, After-Q4 milestone, no due/estimate. Q4 issues 96 → 95; Suma 19 → 18.
       Checks: `--offline` (58 labels, 4 milestones, 5 epics, 116 issues, 117 links) and a mocked `--apply` (116 created, only ING-02 closed).
       The pack has no generator script (plan_data.py stayed in the old sandbox): edit plan.json, then re-render CSV/backlog (packlib logic).
-- [ ] Capacity numbers in the deck (slide capacity) and delivery plan still include PII-16's 32 h for Suma: should become Suma ~264/320, team ~1,009/1,160 (raw pack estimates fell 1,276 → 1,212 h; ING-02's 32 h was already out of the 1,041 view).
-- [ ] OPEN: some slides still say "Security" (lp-kpis dependency, nov aside, ownership aside) despite the Systems team rename; the deck/ADR-01 also call the job store
-      "Q4 build" although ADR-01 says the PostgreSQL job store already exists — confirm with Harish.
+- [x] Capacity updated (4 Oct, deck v38 + delivery plan): Suma 264/320 (83%, 26 of 32 h/wk), team 1,009/1,160 (87%), range 83–91%; plan ticket hours 1,140 → 1,108.
+- [x] **Team name decided 4 Oct: "Systems Architecture team"** (Harish). Deck v38: every "Systems team" / "System Architecture Team" / "System’s team"
+      and the team-sense "Security" renamed (acc-kpis, acc-workflow, current, ing-*, lp-*, nov, oct, ownership, pii-framework). Left as is on purpose:
+      risks slide "Type: Security" (a category), "Security questionnaires", "Security classification", "Security work starts".
+      NOT yet renamed: PII/LP/AI-docs/delivery-plan docs and the ticket pack still say "Systems team" / "Security" — offer.
+- [ ] OPEN (4 Oct): Harish thinks the ingestion **job store is Q4 work, not built**, and said "if it is built, I want that architecture".
+      The 30 Sep read of D:\ingestion-platform found it BUILT: PostgreSQL via SQLAlchemy + Alembic (4 migrations: jobs, tasks per object,
+      events per phase, watermarks, validation results, metrics; app/models/entities.py), Celery on Redis workers, FastAPI API, 210 tests.
+      Gaps were operational (scheduling, retries, stuck-task recovery, alerts, configs in Git, reconciliation). Deck slide 10a still says
+      "Job store · Q4 build" and current/ing-reuse say "No durable job state". Architecture was presented in chat; awaiting his call on the deck.
+
 - [ ] Apply `q4-poc` when the PC is linked (or Harish follows `APPLY.md`).
 - [ ] Fix the Teams message (Systems team ask instead of data owner).
 - [ ] Week-1 tasks from the plan: GitLab governance project, name stewards and approvers, **audit logging on by 12 Oct**,
