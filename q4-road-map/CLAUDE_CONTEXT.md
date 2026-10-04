@@ -14,7 +14,7 @@
 > and is empty (no docs, no instructions).
 > Raw export lives in `q4-road-map/export/` (git-ignored; holds full account history).
 >
-> Last updated: 2026-10-04 (recovery session).
+> Last updated: 2026-10-04 (recovery session; PII guide finished).
 
 ---
 
@@ -208,7 +208,7 @@ Credentials come from the Systems team as environment variables. Deploys go only
 | `platform-poc.zip` (`platctl`: role scripts, mask-at-write, AD sync, Git-only deploys, Presidio `detect.py`) | delivered | **64 demo checks, 30 tests pass** (3 Oct, "PII MASKED" version) |
 | Teams message to the Director (2 versions) | chat widget | 3 Oct; the line asking the Director to name a data owner per client should become the Systems team availability ask |
 | Earlier decks (superseded) | Q3 Retro & Q4 (CkV6qDZMJVeti7m7CYTHVb), From Projects to Platform (EhW2t35KbSSeC5rkz1C7SW), Q4 Initiatives 4-person (647HyrkTcGymrwepwAT8GH), Lessons Learnt and Roadmap (CHSq2VrDScqzFZuJciCFLm) | still mention WW/Cove |
-| **PII protection guide** (education doc) | https://claude.ai/code/artifact/b27c187c-0f2c-4f29-be0e-2f5beb92f3a0 | **in progress**: see §23 |
+| **PII protection guide** (education doc) | https://claude.ai/code/artifact/b27c187c-0f2c-4f29-be0e-2f5beb92f3a0 | **complete** (rev 9, 4 Oct, recovery session): 7 sections |
 
 ## 12. Important Technical Decisions
 - **ADRs:** ADR-01 Ingestion service architecture (keep FastAPI + PG job store + Celery/Redis, add a scheduler; Proposed, due 16 Oct) ·
@@ -251,7 +251,6 @@ Credentials come from the Systems team as environment variables. Deploys go only
 See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **platform-poc 64 checks / 30 tests**.
 
 ## 17. Current Open Issues (**OPEN**)
-- **The PII protection guide is unfinished** (sections 4–7).
 - The Least Privilege doc and PII Governance doc don't yet reflect the 2–3 Oct decisions (mask at write, CDS, "PII MASKED", AD roles per source).
 - Secrets store still appears in LP slides (20c, 21, 22), Oct/Nov/dashboard slides, dependencies, ownership, current state, one-pager, summary,
   and in tickets **EXT-01, LP-07**. PII-16 (encryption, 32 h of Suma's work) is still a Q4 "Could"; it should move after Q4.
@@ -266,7 +265,7 @@ See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **
 - Old decks still mention WW/Cove.
 
 ## 18. Pending Tasks
-- [ ] **Finish the PII protection guide**: Presidio and adopters, where we stand, partner view, sources.
+- [x] Finish the PII protection guide (done 4 Oct, recovery session).
 - [ ] Update the PII Governance and Least Privilege docs with the 2–3 Oct architecture.
 - [ ] Remove the secrets store across slides and tickets; move PII-16 after Q4; mark ING-02 done; rebuild the pack.
 - [ ] Apply `q4-poc` when the PC is linked (or Harish follows `APPLY.md`).
@@ -333,12 +332,22 @@ See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **
 - **Last decision:** mask everything as "PII MASKED", no hidden join keys in Q4, derived values only on request (3 Oct).
 - **Current state:** doc at rev 4 with pending blocks `mxjja2hcr0m.324` (Presidio & adopters), `.325` (Where we stand),
   `.326` (Partner view), `.327` (Sources). Verified readable from this session (2026-10-04).
-- **Remaining work:** fill §4–§7, then the §18 backlog.
+- **Remaining work:** the §18 backlog (guide finished in the recovery session).
 - **Next action:** see §24.
 
 ## 24. IMMEDIATE NEXT ACTION
-Fill the 4 remaining sections of the PII guide in place (one section per call), then update this file.
-After that, offer the §18 items, first the PII and Least Privilege doc updates and the secrets-store/PII-16 clean-up.
+**Done in the recovery session (4 Oct):** the PII guide's §4–§7 were filled in place (rev 9):
+§4 Presidio (modules; **Presidio is moving from Microsoft to the community "Data Privacy Stack" org**,
+github.com/data-privacy-stack/presidio, MIT, new images at `ghcr.io/data-privacy-stack/presidio-*`, old MCR images frozen,
+PyPI presidio-analyzer 2.2.364; documented uses: LiteLLM/AISIX gateways, Spark/Databricks, Fabric, ADF, Azure AI Language;
+no public list of named customers), §5 Where we stand (7-row layer table), §6 Partner view (ask analysts / Legal / Systems team
+one question each; prove Presidio on a wave 1 feed and pg_duckdb-in-view (LP-16); learning table; push: encryption no later than Q1),
+§7 Sources. The lead line was corrected to say Q4 covers discovery, de-identification and access.
+Sources in this sandbox: microsoft.github.io, docs.litellm.ai and the Fabric blog are egress-blocked; GitHub raw and PyPI work.
+
+**Next:** Harish's call from §18. Recommended order: (1) update the PII Governance and Least Privilege docs with the 2–3 Oct
+architecture; (2) remove the secrets store from slides and tickets (EXT-01, LP-07), move PII-16 after Q4, mark ING-02 done,
+rebuild the pack; (3) consider a Presidio-transition note in ADR/PII-03 (pin version, use ghcr images).
 
 ## 25. INFORMATION THAT COULD NOT BE RECOVERED
 - The **final contents of the POC code** (the zips were built in the old sandbox; the export holds only tool calls, many edits
