@@ -271,8 +271,13 @@ See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **
       replaced (UI already calls the real API); ing-architecture "new column: held" → "masked". Deck already had PII-16/encryption after Q4.
 - [x] Delivery Plan doc (main + Backlog tabs, 4 Oct): EXT-01 → "Service-account credentials as environment variables (Systems team)",
       ING-09 / LP-07 reworded, ADR-04 → Superseded (3 Oct), ING-02 → Done, PII-16 → After Q4 (FX.2), PII-16 removed from week tables.
-- [ ] **Rebuild the GitLab import pack** with the same changes: needs Harish to upload `q4-2026-gitlab-import-pack.zip` (not in this session).
-- [ ] Capacity numbers in the deck/plan still include PII-16's 32 h for Suma (ASSUMED: Suma ~264/320, team ~1,009/1,160 once removed) — recompute from the pack.
+- [x] GitLab import pack rebuilt (4 Oct; copy in `q4-road-map/export/`, git-ignored): plan.json edited, issues_import.csv and backlog_full.md
+      regenerated from it (verified byte-identical regeneration first). EXT-01/ING-09/LP-07/F3.2 reworded; EXT-01 team::infra → team::leadership;
+      ING-02 status::done, estimate removed, all boxes ticked; bootstrap_gitlab.py now closes status::done issues on create;
+      PII-16 → FX.2, moscow::wont-q4, After-Q4 milestone, no due/estimate. Q4 issues 96 → 95; Suma 19 → 18.
+      Checks: `--offline` (58 labels, 4 milestones, 5 epics, 116 issues, 117 links) and a mocked `--apply` (116 created, only ING-02 closed).
+      The pack has no generator script (plan_data.py stayed in the old sandbox): edit plan.json, then re-render CSV/backlog (packlib logic).
+- [ ] Capacity numbers in the deck (slide capacity) and delivery plan still include PII-16's 32 h for Suma: should become Suma ~264/320, team ~1,009/1,160 (raw pack estimates fell 1,276 → 1,212 h; ING-02's 32 h was already out of the 1,041 view).
 - [ ] OPEN: some slides still say "Security" (lp-kpis dependency, nov aside, ownership aside) despite the Systems team rename; the deck/ADR-01 also call the job store
       "Q4 build" although ADR-01 says the PostgreSQL job store already exists — confirm with Harish.
 - [ ] Apply `q4-poc` when the PC is linked (or Harish follows `APPLY.md`).
