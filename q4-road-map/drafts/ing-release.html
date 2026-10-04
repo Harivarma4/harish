@@ -1,0 +1,82 @@
+<section id="ing-release" data-transition="fade" style="background:#F4F1EA; color:#16222F; font-family:'IBM Plex Sans', sans-serif; padding:128px 128px 160px; display:flex; flex-direction:column; gap:28px">
+  <div style="display:flex; flex-direction:column; gap:16px">
+    <p style="font-family:'IBM Plex Mono', monospace; font-size:24px; font-weight:500; color:#0E7466; letter-spacing:2px; text-transform:uppercase">Initiative 1 · Release and promotion</p>
+    <h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#16222F">One release, three gates, every client</h2>
+  </div>
+  <svg aria-label="Release flow: a code change passes review and CI, becomes release v1.5.0 with backend and UI images on GitHub Container Registry, built once, scanned and signed. It is deployed to staging for all six clients (Brinks, GA, Alert360, Frontpoint, Crashplan, Fairway); the gate is every client green or a waiver with sign-off. Then QA for all clients with regression and reconciliation; the gate is sign-off for every client. Then prod for all clients on one version, optionally with a pilot wave of two or three clients first." viewBox="0 0 1664 370" style="width:1664px; height:370px" font-family="IBM Plex Sans, sans-serif">
+    <defs>
+      <marker id="rn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#16222F"/></marker>
+      <marker id="ro" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#9A4F16"/></marker>
+    </defs>
+    <rect x="0" y="40" width="300" height="100" rx="14" fill="#FBFAF6" stroke="#DAD4C8" stroke-width="2"/>
+    <text x="20" y="80" font-size="24" font-weight="600" fill="#16222F">Code change</text>
+    <text x="20" y="116" font-size="20" fill="#56606B">PR, review, CI tests</text>
+    <path d="M150 140V192" stroke="#16222F" stroke-width="3" fill="none" marker-end="url(#rn)"/>
+    <rect x="0" y="200" width="300" height="160" rx="14" fill="#F3E4D6" stroke="#9A4F16" stroke-width="2"/>
+    <text x="20" y="240" font-family="IBM Plex Mono, monospace" font-size="24" font-weight="500" fill="#16222F">Release v1.5.0</text>
+    <text x="20" y="276" font-size="20" fill="#16222F">ghcr.io: backend + UI</text>
+    <text x="20" y="306" font-size="20" fill="#16222F">built once, scanned,</text>
+    <text x="20" y="336" font-size="20" fill="#16222F">signed</text>
+    <rect x="380" y="40" width="400" height="250" rx="14" fill="#E0EFEC" stroke="#0E7466" stroke-width="2"/>
+    <text x="400" y="80" font-family="IBM Plex Mono, monospace" font-size="24" font-weight="500" fill="#16222F">STAGING · all clients</text>
+    <text x="400" y="116" font-size="20" fill="#56606B">deploy, migrate, smoke test</text>
+    <rect x="400" y="140" width="113" height="48" rx="8" fill="#FBFAF6" stroke="#DAD4C8" stroke-width="1.5"/>
+    <text x="456.5" y="171" text-anchor="middle" font-size="19" fill="#16222F">Brinks</text>
+    <rect x="523" y="140" width="113" height="48" rx="8" fill="#FBFAF6" stroke="#DAD4C8" stroke-width="1.5"/>
+    <text x="579.5" y="171" text-anchor="middle" font-size="19" fill="#16222F">GA</text>
+    <rect x="646" y="140" width="113" height="48" rx="8" fill="#FBFAF6" stroke="#DAD4C8" stroke-width="1.5"/>
+    <text x="702.5" y="171" text-anchor="middle" font-size="19" fill="#16222F">Alert360</text>
+    <rect x="400" y="202" width="113" height="48" rx="8" fill="#FBFAF6" stroke="#DAD4C8" stroke-width="1.5"/>
+    <text x="456.5" y="233" text-anchor="middle" font-size="19" fill="#16222F">Frontpoint</text>
+    <rect x="523" y="202" width="113" height="48" rx="8" fill="#FBFAF6" stroke="#DAD4C8" stroke-width="1.5"/>
+    <text x="579.5" y="233" text-anchor="middle" font-size="19" fill="#16222F">Crashplan</text>
+    <rect x="646" y="202" width="113" height="48" rx="8" fill="#FBFAF6" stroke="#DAD4C8" stroke-width="1.5"/>
+    <text x="702.5" y="233" text-anchor="middle" font-size="19" fill="#16222F">Fairway</text>
+    <text x="380" y="330" font-size="20" font-weight="600" fill="#9A4F16">Gate: every client green,</text>
+    <text x="380" y="358" font-size="20" font-weight="600" fill="#9A4F16">or waived with sign-off</text>
+    <rect x="850" y="40" width="400" height="250" rx="14" fill="#E0EFEC" stroke="#0E7466" stroke-width="2"/>
+    <text x="870" y="80" font-family="IBM Plex Mono, monospace" font-size="24" font-weight="500" fill="#16222F">QA · all clients</text>
+    <text x="870" y="116" font-size="20" fill="#56606B">regression, reconciliation</text>
+    <rect x="870" y="140" width="113" height="48" rx="8" fill="#FBFAF6" stroke="#DAD4C8" stroke-width="1.5"/>
+    <text x="926.5" y="171" text-anchor="middle" font-size="19" fill="#16222F">Brinks</text>
+    <rect x="993" y="140" width="113" height="48" rx="8" fill="#FBFAF6" stroke="#DAD4C8" stroke-width="1.5"/>
+    <text x="1049.5" y="171" text-anchor="middle" font-size="19" fill="#16222F">GA</text>
+    <rect x="1116" y="140" width="113" height="48" rx="8" fill="#FBFAF6" stroke="#DAD4C8" stroke-width="1.5"/>
+    <text x="1172.5" y="171" text-anchor="middle" font-size="19" fill="#16222F">Alert360</text>
+    <rect x="870" y="202" width="113" height="48" rx="8" fill="#FBFAF6" stroke="#DAD4C8" stroke-width="1.5"/>
+    <text x="926.5" y="233" text-anchor="middle" font-size="19" fill="#16222F">Frontpoint</text>
+    <rect x="993" y="202" width="113" height="48" rx="8" fill="#FBFAF6" stroke="#DAD4C8" stroke-width="1.5"/>
+    <text x="1049.5" y="233" text-anchor="middle" font-size="19" fill="#16222F">Crashplan</text>
+    <rect x="1116" y="202" width="113" height="48" rx="8" fill="#FBFAF6" stroke="#DAD4C8" stroke-width="1.5"/>
+    <text x="1172.5" y="233" text-anchor="middle" font-size="19" fill="#16222F">Fairway</text>
+    <text x="850" y="330" font-size="20" font-weight="600" fill="#9A4F16">Gate: signed off for</text>
+    <text x="850" y="358" font-size="20" font-weight="600" fill="#9A4F16">every client</text>
+    <rect x="1320" y="40" width="344" height="250" rx="14" fill="#16222F" stroke="#16222F" stroke-width="2"/>
+    <text x="1340" y="80" font-family="IBM Plex Mono, monospace" font-size="24" font-weight="500" fill="#F4F1EA">PROD · all clients</text>
+    <text x="1340" y="116" font-size="20" fill="#C9D0D6">one version everywhere</text>
+    <rect x="1340" y="140" width="94" height="48" rx="8" fill="#24384A" stroke="#5FC2B0" stroke-width="1.5"/>
+    <text x="1387.0" y="171" text-anchor="middle" font-size="19" fill="#F4F1EA">Brinks</text>
+    <rect x="1444" y="140" width="94" height="48" rx="8" fill="#24384A" stroke="#5FC2B0" stroke-width="1.5"/>
+    <text x="1491.0" y="171" text-anchor="middle" font-size="19" fill="#F4F1EA">GA</text>
+    <rect x="1548" y="140" width="94" height="48" rx="8" fill="#24384A" stroke="#5FC2B0" stroke-width="1.5"/>
+    <text x="1595.0" y="171" text-anchor="middle" font-size="19" fill="#F4F1EA">Alert360</text>
+    <rect x="1340" y="202" width="94" height="48" rx="8" fill="#24384A" stroke="#5FC2B0" stroke-width="1.5"/>
+    <text x="1387.0" y="233" text-anchor="middle" font-size="19" fill="#F4F1EA">Frontpoint</text>
+    <rect x="1444" y="202" width="94" height="48" rx="8" fill="#24384A" stroke="#5FC2B0" stroke-width="1.5"/>
+    <text x="1491.0" y="233" text-anchor="middle" font-size="19" fill="#F4F1EA">Crashplan</text>
+    <rect x="1548" y="202" width="94" height="48" rx="8" fill="#24384A" stroke="#5FC2B0" stroke-width="1.5"/>
+    <text x="1595.0" y="233" text-anchor="middle" font-size="19" fill="#F4F1EA">Fairway</text>
+    <text x="1320" y="330" font-size="20" font-weight="600" fill="#16222F">Pilot wave of 2–3</text>
+    <text x="1320" y="358" font-size="20" font-weight="600" fill="#16222F">clients is optional</text>
+    <path d="M300 280H340V165H372" stroke="#16222F" stroke-width="3" fill="none" marker-end="url(#rn)"/>
+    <path d="M780 165H842" stroke="#9A4F16" stroke-width="3" fill="none" marker-end="url(#ro)"/>
+    <path d="M1250 165H1312" stroke="#9A4F16" stroke-width="3" fill="none" marker-end="url(#ro)"/>
+  </svg>
+  <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:24px">
+    <div style="display:flex; flex-direction:column; gap:8px; background:#FBFAF6; padding:22px 28px; border:1px solid #DAD4C8; border-radius:14px"><p style="font-family:'IBM Plex Mono', monospace; font-size:24px; color:#0E7466">SAME IMAGE EVERYWHERE</p><p style="font-size:24px; line-height:1.35; color:#16222F">Built once and promoted by digest. Clients differ only in env vars and pipeline configs in Git.</p></div>
+    <div style="display:flex; flex-direction:column; gap:8px; background:#FBFAF6; padding:22px 28px; border:1px solid #DAD4C8; border-radius:14px"><p style="font-family:'IBM Plex Mono', monospace; font-size:24px; color:#0E7466">ONE MR PER STEP</p><p style="font-size:24px; line-height:1.35; color:#16222F">A fleet repo pins each client's staging, QA and prod version; each client's Jenkins deploys it.</p></div>
+    <div style="display:flex; flex-direction:column; gap:8px; background:#FBFAF6; padding:22px 28px; border:1px solid #DAD4C8; border-radius:14px"><p style="font-family:'IBM Plex Mono', monospace; font-size:24px; color:#9A4F16">SAFE TO ROLL BACK</p><p style="font-size:24px; line-height:1.35; color:#16222F">Smoke test after every deploy; a failure puts the previous version back. Schema changes in two steps.</p></div>
+  </div>
+  <p style="position:absolute; left:128px; bottom:64px; width:1664px; font-size:24px; color:#56606B">Data Platform Roadmap · 10f</p>
+  <aside>This is how a change reaches the clients, now that each client runs its own copy of the ingestion platform in its own environment. Everything we ship, the UI, the API, the scheduler, the alerts, the workers and the dlt wrapper, is one versioned release. A fix starts as a pull request with review and tests. A version tag builds two images, the backend and the UI, once; they are scanned and signed and stored in GitHub Container Registry. From then on the same image moves through every environment and is never rebuilt. Every client has three environments: staging, QA and prod. A release goes to staging for every client first: deploy, run the database migration, and a smoke test. It moves on only when every client is green; a problem in one client's environment, like an expired credential, can be waived with written sign-off, but a platform bug stops the release and we fix it with a patch. Then QA for every client: regression runs and reconciliation, and sign-off. Only then does it go to prod, and every client runs the same prod version. We can still start prod with a pilot wave of two or three clients, a night ahead of the rest. Which client runs which version is written in one fleet repository, so each step is one merge request, and each client's own Jenkins does the deploy. If the smoke test fails after a deploy, Jenkins puts the previous version back automatically; database changes are made in two steps so that is always safe. PII registries and role scripts are one-time setup per client and are not part of this release. In Q4 this is ING-04, ING-27 and ING-28, about 88 hours, all with Vatsal, and ADR-14 records the rules.</aside>
+</section>

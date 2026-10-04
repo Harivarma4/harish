@@ -372,7 +372,23 @@ See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **
 - **Current state:** doc at rev 4 with pending blocks `mxjja2hcr0m.324` (Presidio & adopters), `.325` (Where we stand),
   `.326` (Partner view), `.327` (Sources). Verified readable from this session (2026-10-04).
 - **Remaining work:** the §18 backlog (guide finished in the recovery session).
-- **Latest (4 Oct):** job-store ERD + full PostgreSQL DDL + draft slide 10e prepared in drafts/; awaiting Harish's OK to publish 10c/10d/10e.
+- **Latest (4 Oct, afternoon) — IMPLEMENTED:** Harish locked the per-client deployment model ("lock it and make changes everywhere") and chose
+  "All to Vatsal, move more to January" for capacity. Done:
+  - Deck **v39** published (https://claude.ai/artifact/HrmGmB3wfj9BjsTcbFRomE): new slides 10c `ing-jobstore`, 10d `ing-tables`, 10e `ing-erd`,
+    10f `ing-release` (one release, staging → QA → prod for every client); the 7 "built" edits; capacity 1,043/1,160 (90%), Vatsal 312/320 (98%);
+    hosting → client environments (ing-kpis, oct, ownership); expiry/audit-log claims moved to January (acc-kpis, acc-phases, dashboard,
+    onepager, sequencing, dec); tenant wording fixed on ing-tables and ing-erd (one client per database).
+  - Pack: ING-04 = release pipeline (2d → 4d); new ING-27 (client staging/QA/prod, fleet repo, Jenkins deploy; 4d, W5–W6, due 13 Nov) and
+    ING-28 (promotion gates, /health, /version, upgrade test, status board, drift check, ADR-14; 3d, W7, due 20 Nov), both Vatsal;
+    EXT-02 = staging/QA/prod environments in each client's environment (Infra and clients); ING-01/12/15/16 and ACC-13 updated;
+    ACC-10/11/12 → FX.3 After Q4. 118 issues (94 Q4 open + ING-02 done; 23 deferred), 122 links. Generator saved as `tools/pack_gen.py`
+    (byte-identical with the attached pack). A same-file read/write bug briefly emptied backlog_full.md; rebuilt and verified.
+  - Ingestion doc: new section "Deployment and release", ADR-10 decided (copy per client), ADR-14 row, rollout rows ING-27/28, two risks.
+  - Delivery plan: capacity (ticket hours 1,142; after savings 1,043; Vatsal 388/312, Tight), E1 table rows ING-27/28, E3 ACC-10/11/12 moved to
+    the deferred table, week-by-week plan (W6 and W7 now 17.0 days of 16 = over), dependencies (110 links, 24 cross-team), backlog tab section
+    "Deployment and release (4 Oct)" and entries, traceability C17.
+  - OPEN: W6–W7 (9–20 Nov) are overloaded at 17 of 16 team-days; ING-27/28 land in the same weeks as wave 1 config and parallel run.
+  - OPEN: what each client's QA environment loads from (test copy or prod sources read-only) — ING-12 now asks it.
 - **Next action:** see §24.
 
 ## 24. IMMEDIATE NEXT ACTION
