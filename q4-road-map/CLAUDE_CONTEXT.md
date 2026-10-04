@@ -69,6 +69,7 @@ Required arc: **Standardize → Govern → Secure → Automate → Scale → Ena
 | 2 Oct | PII: masking at the **data level** (mask at write, "Option A"); only a per-client **CDS** account sees clear **address** data, read through PostgreSQL, audited | CONFIRMED |
 | 3 Oct | Ingestion credentials = existing per-client service accounts as **environment variables**, managed by the **Systems team** (no new secrets store or tenant layer) | CONFIRMED |
 | 3 Oct | **Encryption moved after Q4** | CONFIRMED |
+| 4 Oct | **Ingestion deployment = one copy per client, no multi-tenancy.** We build versioned container images and store them as a project in an artifact store ("orbit storage" as transcribed; ASSUMED to mean an artifact/container registry). Each client pulls the image and runs its own instance (API, worker, scheduler, Redis, PostgreSQL job store) in its own environment. `tenant_id` becomes one fixed value per instance; the platform's tenant features (tenants table, is_platform_admin, cross-tenant checks) are not used. OPEN: whether "their environment" means client-owned infrastructure or a VOZIQ environment for each client. | CONFIRMED |
 | 3 Oct | Masking happens **inside the ingestion platform** on every source→destination load | CONFIRMED |
 | 3 Oct | "Security team" → "Systems / System Architecture team" throughout | IMPLEMENTED |
 | 3 Oct | Q3 lessons rewritten (4 rows; "One SQL Server carries everything" removed) | IMPLEMENTED |
@@ -218,6 +219,7 @@ Credentials come from the Systems team as environment variables. Deploys go only
   ADR-08 AI docs architecture & data policy · ADR-09 identity source (AD/Entra/SSO; Proposed) · ADR-10 container hosting
   (Infra) · ADR-11 schedules in the platform (croniter + advisory lock) · ADR-12 parallel runs proven by reconciliation +
   14-day readiness · ADR-13 configs in Git.
+- **Single-tenant, per-client deployment (4 Oct):** the code's multi-tenant layer stays dormant (one tenant per instance). The scaling risk moves from inside one database to the fleet: image versioning and releases, Alembic migrations per instance, upgrades and rollback, config drift, health/version visibility across copies, and backups of each job store. API-first now means one API per instance, a service account per instance, and versioned API compatibility because clients may run different versions.
 - Approach **A (mask at write) chosen over C (Parquet column encryption)**: SQL Server and DuckDB can't read
   column-encrypted Parquet, and readers without the key get errors instead of masked values. C stays a future option if engines change.
 - Address tier = a **real table**, not a pg_duckdb view over raw (a view over `read_parquet()` would let the reader read any file).
