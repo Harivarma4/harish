@@ -202,8 +202,8 @@ Credentials come from the Systems team as environment variables. Deploys go only
 | GitLab Delivery Plan doc ("Q4 2026 Data Platform Roadmap – GitLab Delivery Plan"; Main, Backlog, Traceability tabs) | https://claude.ai/code/artifact/099e8497-47e1-439a-a7f3-3b7972e01dec | current to 3 Oct |
 | GitLab import pack `q4-2026-gitlab-import-pack.zip` (bootstrap script, CSV, labels, milestones, templates, `owners.json`) | delivered to Harish | **116 issues**, ~117 links, 5 epics, 59 labels |
 | AI Documentation – Architecture and POC (doc) + `ai-docs-poc.zip` (35 tests) | https://claude.ai/artifact/GsUUqvCT7RDXWkmTNmDJTZ | done 29 Sep |
-| Least Privilege & Access – Architecture and POC (doc) + `accessctl-poc.zip` (28 tests, PG16 + pgaudit) | https://claude.ai/artifact/9icqtG68X4PFfri4GtyXwK | done 29 Sep; **not yet updated with 2 Oct decisions** |
-| PII Governance – Architecture and POC (doc) + `piictl-poc.zip` (22 tests; 10 review findings fixed) | https://claude.ai/code/artifact/56dbe4fb-a140-416e-9f26-32349b589d4c | done 30 Sep; **not yet updated with 2–3 Oct decisions** |
+| Least Privilege & Access – Architecture and POC (doc) + `accessctl-poc.zip` (28 tests, PG16 + pgaudit) | https://claude.ai/artifact/9icqtG68X4PFfri4GtyXwK | done 29 Sep; **updated 4 Oct** (new "Agreed design (2 October)" section + diagram; persona/binding tables, rollout LP-14..17, env-var credentials, waves named) |
+| PII Governance – Architecture and POC (doc) + `piictl-poc.zip` (22 tests; 10 review findings fixed) | https://claude.ai/code/artifact/56dbe4fb-a140-416e-9f26-32349b589d4c | done 30 Sep; **updated 4 Oct** ("What changed on 2–3 October" table; architecture diagram redrawn; classification = Presidio + provisional; protection = "PII MASKED" + CDS table; decisions, rollout incl. PII-17/18, PII-16 after Q4) |
 | Ingestion Platform – Architecture and POC (doc) + `q4-poc.zip` (224 tests) | https://claude.ai/code/artifact/592877c3-9309-4ebc-b8af-0daf544ab610 | done 30 Sep |
 | `platform-poc.zip` (`platctl`: role scripts, mask-at-write, AD sync, Git-only deploys, Presidio `detect.py`) | delivered | **64 demo checks, 30 tests pass** (3 Oct, "PII MASKED" version) |
 | Teams message to the Director (2 versions) | chat widget | 3 Oct; the line asking the Director to name a data owner per client should become the Systems team availability ask |
@@ -251,7 +251,6 @@ Credentials come from the Systems team as environment variables. Deploys go only
 See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **platform-poc 64 checks / 30 tests**.
 
 ## 17. Current Open Issues (**OPEN**)
-- The Least Privilege doc and PII Governance doc don't yet reflect the 2–3 Oct decisions (mask at write, CDS, "PII MASKED", AD roles per source).
 - Secrets store still appears in LP slides (20c, 21, 22), Oct/Nov/dashboard slides, dependencies, ownership, current state, one-pager, summary,
   and in tickets **EXT-01, LP-07**. PII-16 (encryption, 32 h of Suma's work) is still a Q4 "Could"; it should move after Q4.
 - ING-02 ("replace the mock API") is still open in the plan and deck, but it's already done in the code.
@@ -266,7 +265,7 @@ See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **
 
 ## 18. Pending Tasks
 - [x] Finish the PII protection guide (done 4 Oct, recovery session).
-- [ ] Update the PII Governance and Least Privilege docs with the 2–3 Oct architecture.
+- [x] Update the PII Governance and Least Privilege docs with the 2–3 Oct architecture (done 4 Oct).
 - [ ] Remove the secrets store across slides and tickets; move PII-16 after Q4; mark ING-02 done; rebuild the pack.
 - [ ] Apply `q4-poc` when the PC is linked (or Harish follows `APPLY.md`).
 - [ ] Fix the Teams message (Systems team ask instead of data owner).
@@ -345,8 +344,12 @@ one question each; prove Presidio on a wave 1 feed and pg_duckdb-in-view (LP-16)
 §7 Sources. The lead line was corrected to say Q4 covers discovery, de-identification and access.
 Sources in this sandbox: microsoft.github.io, docs.litellm.ai and the Fabric blog are egress-blocked; GitHub raw and PyPI work.
 
-**Next:** Harish's call from §18. Recommended order: (1) update the PII Governance and Least Privilege docs with the 2–3 Oct
-architecture; (2) remove the secrets store from slides and tickets (EXT-01, LP-07), move PII-16 after Q4, mark ING-02 done,
+**Done 4 Oct (later):** PII Governance and Least Privilege docs updated in place (Harish said "Yes" to item 1).
+LP doc: `4698b159-b4f7-43a2-b8cf-651f793b3416` (body node `486fad98-87f0`, new widget `9f687729-071c`); PII doc body node
+`e14ef60e-6ccc`, widget `cf08efd8-3db0` redrawn. Minor: a few replaced paragraphs lost their bold lead-in words (cosmetic).
+The AI Documentation doc is `8085341e-5258-4cda-b6ec-924712df29a8`.
+
+**Next:** Harish's call from §18. Recommended order: (2) remove the secrets store from slides and tickets (EXT-01, LP-07), move PII-16 after Q4, mark ING-02 done,
 rebuild the pack; (3) consider a Presidio-transition note in ADR/PII-03 (pin version, use ghcr images).
 
 ## 25. INFORMATION THAT COULD NOT BE RECOVERED
