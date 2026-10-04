@@ -1,0 +1,3 @@
+# Raw claude.ai exports contain full account history — never commit them.
+*
+!.gitignore
