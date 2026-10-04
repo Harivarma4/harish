@@ -1,0 +1,72 @@
+<section id="ing-jobstore" data-transition="fade" style="background:#F4F1EA; color:#16222F; font-family:'IBM Plex Sans', sans-serif; padding:128px 128px 160px; display:flex; flex-direction:column; gap:24px">
+  <div style="display:flex; flex-direction:column; gap:16px">
+    <p style="font-family:'IBM Plex Mono', monospace; font-size:24px; font-weight:500; color:#0E7466; letter-spacing:2px; text-transform:uppercase">Initiative 1 · Job store</p>
+    <h2 style="font-size:64px; font-weight:600; line-height:1.1; color:#16222F">Built: every run is recorded, and every task finishes</h2>
+  </div>
+  <svg aria-label="Job store architecture: the API writes jobs and tasks to PostgreSQL and puts one Redis message per task; a Celery worker claims a task atomically and moves it from PENDING to RUNNING; a run ends SUCCESS or FAILED; a transient error sends it to RETRY_WAIT and the scheduler re-queues it at retry_at; a task with no heartbeat for 10 minutes is taken back by the reaper and re-queued; CANCELLED is set by a person. Green parts are in the code today; orange parts were added by the Q4 POC." viewBox="0 0 1664 430" style="width:1664px; height:430px" font-family="IBM Plex Sans, sans-serif" font-size="22">
+    <defs>
+      <marker id="jsn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#16222F"/></marker>
+      <marker id="jso" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#9A4F16"/></marker>
+    </defs>
+    <rect x="0" y="0" width="400" height="430" rx="14" fill="#FBFAF6" stroke="#DAD4C8" stroke-width="2"/>
+    <text x="22" y="44" font-size="26" font-weight="600" fill="#16222F">PostgreSQL job store</text>
+    <text x="22" y="78" fill="#0E7466">in the code today</text>
+    <text x="22" y="124" fill="#16222F">Jobs</text>
+    <text x="22" y="160" fill="#16222F">Tasks, one per object</text>
+    <text x="22" y="196" fill="#16222F">Events, one per phase</text>
+    <text x="22" y="232" fill="#16222F">Watermarks</text>
+    <text x="22" y="268" fill="#16222F">Validation results</text>
+    <text x="22" y="304" fill="#16222F">Metrics</text>
+    <line x1="22" y1="330" x2="378" y2="330" stroke="#DAD4C8" stroke-width="2"/>
+    <text x="22" y="366" fill="#9A4F16">Q4 POC adds: heartbeat_at,</text>
+    <text x="22" y="398" fill="#9A4F16">retry_at, schedules, alerts</text>
+    <text x="460" y="30" fill="#56606B">API writes the job · one Redis message per task · Celery workers load it with dlt</text>
+    <g fill="none" stroke="#9A4F16" stroke-width="3" stroke-dasharray="10 7">
+      <path d="M880 160V112H580V160" marker-end="url(#jso)"/>
+    </g>
+    <text x="730" y="100" text-anchor="middle" fill="#9A4F16">no heartbeat for 10 min: reaper re-queues</text>
+    <g fill="none" stroke="#9A4F16" stroke-width="3">
+      <path d="M930 230V330" marker-end="url(#jso)"/>
+      <path d="M820 365H580V232" marker-end="url(#jso)"/>
+    </g>
+    <text x="946" y="290" fill="#9A4F16">transient error</text>
+    <text x="598" y="352" fill="#9A4F16">scheduler, at retry_at</text>
+    <g fill="none" stroke="#16222F" stroke-width="3">
+      <path d="M690 195H818" marker-end="url(#jsn)"/>
+      <path d="M1040 180L1178 128" marker-end="url(#jsn)"/>
+      <path d="M1040 212L1178 262" marker-end="url(#jsn)"/>
+    </g>
+    <text x="754" y="182" text-anchor="middle" font-size="20" fill="#56606B">atomic claim</text>
+    <rect x="470" y="160" width="220" height="70" rx="14" fill="#E0EFEC" stroke="#0E7466" stroke-width="2"/>
+    <text x="490" y="191" font-family="IBM Plex Mono, monospace" font-size="24" font-weight="500" fill="#16222F">PENDING</text>
+    <text x="490" y="219" font-size="20" fill="#16222F">queued in Redis</text>
+    <rect x="820" y="160" width="220" height="70" rx="14" fill="#E0EFEC" stroke="#0E7466" stroke-width="2"/>
+    <text x="840" y="191" font-family="IBM Plex Mono, monospace" font-size="24" font-weight="500" fill="#16222F">RUNNING</text>
+    <text x="840" y="219" font-size="20" fill="#9A4F16">heartbeat every 30 s</text>
+    <rect x="1180" y="80" width="220" height="70" rx="14" fill="#E0EFEC" stroke="#0E7466" stroke-width="2"/>
+    <text x="1200" y="111" font-family="IBM Plex Mono, monospace" font-size="24" font-weight="500" fill="#16222F">SUCCESS</text>
+    <text x="1200" y="139" font-size="20" fill="#16222F">final</text>
+    <rect x="1180" y="240" width="220" height="70" rx="14" fill="#E0EFEC" stroke="#0E7466" stroke-width="2"/>
+    <text x="1200" y="271" font-family="IBM Plex Mono, monospace" font-size="24" font-weight="500" fill="#16222F">FAILED</text>
+    <text x="1200" y="299" font-size="20" fill="#16222F">final · one alert</text>
+    <text x="1180" y="340" font-size="20" fill="#56606B">permanent error, or</text>
+    <text x="1180" y="366" font-size="20" fill="#56606B">no attempts left</text>
+    <rect x="820" y="330" width="300" height="70" rx="14" fill="#F3E4D6" stroke="#9A4F16" stroke-width="2"/>
+    <text x="840" y="361" font-family="IBM Plex Mono, monospace" font-size="24" font-weight="500" fill="#16222F">RETRY_WAIT</text>
+    <text x="840" y="389" font-size="20" fill="#9A4F16">waits 1, 2, 4 min… max 30</text>
+    <rect x="1440" y="160" width="224" height="70" rx="14" fill="#FBFAF6" stroke="#8A929A" stroke-width="2" stroke-dasharray="8 6"/>
+    <text x="1460" y="191" font-family="IBM Plex Mono, monospace" font-size="24" font-weight="500" fill="#16222F">CANCELLED</text>
+    <text x="1460" y="219" font-size="20" fill="#56606B">by a person</text>
+    <rect x="1440" y="300" width="20" height="20" rx="4" fill="#E0EFEC" stroke="#0E7466" stroke-width="2"/>
+    <text x="1470" y="317" font-size="20" fill="#16222F">in the code today</text>
+    <rect x="1440" y="340" width="20" height="20" rx="4" fill="#F3E4D6" stroke="#9A4F16" stroke-width="2"/>
+    <text x="1470" y="357" font-size="20" fill="#16222F">added by Q4 POC</text>
+  </svg>
+  <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:24px">
+    <div style="display:flex; flex-direction:column; gap:8px; background:#FBFAF6; padding:22px 28px; border:1px solid #DAD4C8; border-radius:14px"><p style="font-family:'IBM Plex Mono', monospace; font-size:24px; color:#0E7466">CLAIM ONCE</p><p style="font-size:24px; line-height:1.35; color:#16222F">A worker takes a task with one conditional update, so a redelivered message never starts a second copy.</p></div>
+    <div style="display:flex; flex-direction:column; gap:8px; background:#FBFAF6; padding:22px 28px; border:1px solid #DAD4C8; border-radius:14px"><p style="font-family:'IBM Plex Mono', monospace; font-size:24px; color:#9A4F16">RETRY BY ITSELF</p><p style="font-size:24px; line-height:1.35; color:#16222F">Timeouts, 429/5xx and deadlocks retry up to 3 times; bad credentials or config fail at once.</p></div>
+    <div style="display:flex; flex-direction:column; gap:8px; background:#FBFAF6; padding:22px 28px; border:1px solid #DAD4C8; border-radius:14px"><p style="font-family:'IBM Plex Mono', monospace; font-size:24px; color:#9A4F16">DEAD WORKER TAKEN BACK</p><p style="font-size:24px; line-height:1.35; color:#16222F">Killed mid-load on 2.5M rows, the task re-ran and finished 35 s later; a slow worker can't overwrite it.</p></div>
+  </div>
+  <p style="position:absolute; left:128px; bottom:64px; width:1664px; font-size:24px; color:#56606B">Data Platform Roadmap · 10c</p>
+  <aside>This is the part of the ingestion platform that is already built, and it is what makes runs trustworthy. Every run is a job in PostgreSQL, split into one task per table or file, and every phase, watermark, validation result and metric is recorded against it. The API writes the job and puts one message per task on Redis; Celery workers pick tasks up and load them with dlt. A worker claims a task with a single conditional update, so even if Redis delivers the same message twice, only one copy runs. The orange parts are what the Q4 proof of concept added on top, so that six clients can run every day without anyone watching. A transient error, such as a timeout, a 429 or 5xx response or a deadlock, puts the task into RETRY_WAIT, and the scheduler re-queues it after one, two, then four minutes, up to thirty, for three attempts by default. A permanent error, like bad credentials or a missing table, fails at once and sends one alert. While a task runs, its worker writes a heartbeat every thirty seconds; if the heartbeat stops for ten minutes, the reaper takes the task back and runs it again. In the test we killed a worker in the middle of a 2.5 million row load and it finished on the second attempt 35 seconds later. Fencing on the attempt number means a worker that was only slow can never overwrite the newer result. So in Q4 we are not building the job store; we are hardening, hosting and operating it.</aside>
+</section>

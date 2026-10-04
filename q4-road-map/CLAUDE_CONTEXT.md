@@ -286,7 +286,15 @@ See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **
       The 30 Sep read of D:\ingestion-platform found it BUILT: PostgreSQL via SQLAlchemy + Alembic (4 migrations: jobs, tasks per object,
       events per phase, watermarks, validation results, metrics; app/models/entities.py), Celery on Redis workers, FastAPI API, 210 tests.
       Gaps were operational (scheduling, retries, stuck-task recovery, alerts, configs in Git, reconciliation). Deck slide 10a still says
-      "Job store · Q4 build" and current/ing-reuse say "No durable job state". Architecture was presented in chat; awaiting his call on the deck.
+      "Job store · Q4 build" and current/ing-reuse say "No durable job state". DECIDED 4 Oct: "built matches your code" → mark the job store as built.
+      Drafted (NOT yet published, awaiting Harish's OK): slide 10c `ing-jobstore` (task states PENDING→RUNNING→SUCCESS/FAILED, RETRY_WAIT,
+      reaper, atomic claim, fencing; green = in code, orange = Q4 POC) and slide 10d `ing-tables` (real tables from app/models/entities.py:
+      connections, targets, pipelines, pipeline_objects | jobs, job_tasks, job_events, validation_results, watermarks, job_metrics |
+      Q4 migration 0005_q4_operations: schedules, alert_channels, alert_deliveries, reconciliation_specs, reconciliation_runs + job_tasks.heartbeat_at/retry_at;
+      also tenants, users, secrets, audit_events, templates, uploads). Copies + PNG previews in `q4-road-map/drafts/`.
+      Also prepared locally (unpublished): "built" wording on ing-architecture, current, ing-reuse, evolution, ing-phases, nov, onepager.
+      On publish: re-read project/deck.json, insert ing-jobstore + ing-tables after ing-ui.
+      Noted, not changed: ing-reuse says "no server-side auth" but code has JWT + five RBAC roles.
 
 - [ ] Apply `q4-poc` when the PC is linked (or Harish follows `APPLY.md`).
 - [ ] Fix the Teams message (Systems team ask instead of data owner).
