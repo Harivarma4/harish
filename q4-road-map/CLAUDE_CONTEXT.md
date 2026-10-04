@@ -266,7 +266,15 @@ See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **
 ## 18. Pending Tasks
 - [x] Finish the PII protection guide (done 4 Oct, recovery session).
 - [x] Update the PII Governance and Least Privilege docs with the 2–3 Oct architecture (done 4 Oct).
-- [ ] Remove the secrets store across slides and tickets; move PII-16 after Q4; mark ING-02 done; rebuild the pack.
+- [x] Deck (v37, 4 Oct): secrets store removed from 16 slides (current, dashboard, dependencies, evolution, ing-architecture,
+      ing-phases, ing-reuse, ing-ui, lp-kpis, lp-phases, lp-split, nov, oct, onepager, ownership, summary); mock-API text
+      replaced (UI already calls the real API); ing-architecture "new column: held" → "masked". Deck already had PII-16/encryption after Q4.
+- [x] Delivery Plan doc (main + Backlog tabs, 4 Oct): EXT-01 → "Service-account credentials as environment variables (Systems team)",
+      ING-09 / LP-07 reworded, ADR-04 → Superseded (3 Oct), ING-02 → Done, PII-16 → After Q4 (FX.2), PII-16 removed from week tables.
+- [ ] **Rebuild the GitLab import pack** with the same changes: needs Harish to upload `q4-2026-gitlab-import-pack.zip` (not in this session).
+- [ ] Capacity numbers in the deck/plan still include PII-16's 32 h for Suma (ASSUMED: Suma ~264/320, team ~1,009/1,160 once removed) — recompute from the pack.
+- [ ] OPEN: some slides still say "Security" (lp-kpis dependency, nov aside, ownership aside) despite the Systems team rename; the deck/ADR-01 also call the job store
+      "Q4 build" although ADR-01 says the PostgreSQL job store already exists — confirm with Harish.
 - [ ] Apply `q4-poc` when the PC is linked (or Harish follows `APPLY.md`).
 - [ ] Fix the Teams message (Systems team ask instead of data owner).
 - [ ] Week-1 tasks from the plan: GitLab governance project, name stewards and approvers, **audit logging on by 12 Oct**,
