@@ -408,6 +408,17 @@ See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **
   - PII registry: design only, `q4-road-map/drafts/pii_registry_design.md` (hook = second dlt add_map after the transform map in
     `_run`, fail closed; `pii_column_rules` table keyed by connection+object+source column; Presidio provisional masking pre-run;
     CDS address side-write; validation exclusions + new `masking` check; ≈14.5 engineer-days; 3 open questions).
+- **5 Oct — IMPLEMENTED: deck v40, "Data Platform" story** (Harish: CTO/CEO must see Data Platform as THE project, the rest as capabilities).
+  Order: big picture (cover "Data Platform", lessons, current, target, NEW `platform` "One project, four capabilities", onepager, summary)
+  → how they fit (sequencing, dependencies) → Capability 1 Ingestion Platform (divider `cap-ing` + ing-*) → Capability 2 Least Access
+  Privilege (`cap-lap` + lp-* + acc-*; access requests are part of it) → Capability 3 PII Data Governance (`cap-pii` + pii-*) →
+  Capability 4 AI Documentation (`cap-doc` + doc-*) → delivery (oct, nov, dec, evolution, capacity) → risks, dashboard, ownership, asks.
+  55 slides, footers renumbered 02–55; "Initiative N" → "Capability N" everywhere (old 2 PII → 3, old 3 LP → 2); labels title-case
+  (Ingestion Platform, Least Access Privilege, PII Data Governance, AI Documentation). Generator: `tools/deck_restructure_v40.py`.
+  NOT yet renamed to "capability": the ingestion doc, delivery plan, PII/LP/AI-docs docs and the ticket pack (offer).
+- **5 Oct — ingestion-platform branch `fix/open-items`** (pushed, no PR yet): default-secret startup guard, S3 source form uses
+  access keys, hashed lock files (`requirements*.lock`, uv --universal; `scripts/check_lock.py` in CI). Job-store migration 0005
+  (status CHECKs + composite indexes) in progress; Q4 POC re-application pending (Harish asked to "fix all open items" 5 Oct).
 - **Next action:** see §24.
 
 ## 24. IMMEDIATE NEXT ACTION
