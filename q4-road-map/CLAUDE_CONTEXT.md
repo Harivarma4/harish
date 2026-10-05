@@ -397,7 +397,14 @@ See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **
     closes a cross-client hole), dlt-normalized folder names, retries/partition clear (task-tagged file layout, atomic claim,
     redelivery, worker-side prepare_partitioned_object, shared compose volume), SQL Server `bit` MIN/MAX, job-page event de-dup +
     `after_id` cursor. Tests 210 → **231 passed**, ruff clean, frontend lint+build OK (tested with SQLAlchemy 2.0; 2.1 breaks one
-    existing test — needs the ING-04 lock file). No PR opened yet.
+    existing test — needs the ING-04 lock file).
+  - **PR #1** https://github.com/Harivarma4/ingestion-platform/pull/1 (`fix/review-findings` → `master`), watched. CI was red on
+    `master` already; `5a3e1bb` fixed it (pytest `pythonpath`, `sqlalchemy<2.1` pin, removed Java + `pytest -m slow` steps).
+    CI green, mergeable, awaiting review/merge.
+  - **Rating after full code read (5 Oct):** overall **6/10 as uploaded, ~7/10 with PR #1 merged** (the earlier 7/10 came from a
+    partial read). Design 8, tests 8 (backend 231; frontend has none), job store 7.5, correctness 5.5→7.5, security 6→7
+    (default JWT key `change-me…` and admin `ChangeMe123!` in config.py with no startup guard; tenant isolation only in API),
+    frontend 6.5, ops 5 (no lock file, no metrics, no scheduler/retries/alerts on master, `/api` not `/api/v1`).
   - PII registry: design only, `q4-road-map/drafts/pii_registry_design.md` (hook = second dlt add_map after the transform map in
     `_run`, fail closed; `pii_column_rules` table keyed by connection+object+source column; Presidio provisional masking pre-run;
     CDS address side-write; validation exclusions + new `masking` check; ≈14.5 engineer-days; 3 open questions).
