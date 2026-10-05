@@ -400,7 +400,7 @@ See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **
     existing test — needs the ING-04 lock file).
   - **PR #1** https://github.com/Harivarma4/ingestion-platform/pull/1 (`fix/review-findings` → `master`), watched. CI was red on
     `master` already; `5a3e1bb` fixed it (pytest `pythonpath`, `sqlalchemy<2.1` pin, removed Java + `pytest -m slow` steps).
-    CI green, mergeable, awaiting review/merge.
+    CI green; **merged into `master` 5 Oct 09:50 UTC**. Rating is now ~7/10 on master.
   - **Rating after full code read (5 Oct):** overall **6/10 as uploaded, ~7/10 with PR #1 merged** (the earlier 7/10 came from a
     partial read). Design 8, tests 8 (backend 231; frontend has none), job store 7.5, correctness 5.5→7.5, security 6→7
     (default JWT key `change-me…` and admin `ChangeMe123!` in config.py with no startup guard; tenant isolation only in API),
