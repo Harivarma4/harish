@@ -417,14 +417,14 @@ See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **
   (Ingestion Platform, Least Access Privilege, PII Data Governance, AI Documentation). Generator: `tools/deck_restructure_v40.py`.
   NOT yet renamed to "capability": the ingestion doc, delivery plan, PII/LP/AI-docs docs and the ticket pack (offer).
 - **5 Oct — IMPLEMENTED: all open items from the rating** (Harish: "Fix all the open items").
-  - **PR #2** https://github.com/Harivarma4/ingestion-platform/pull/2 (`fix/open-items` → `master`, watched): default-secret startup
+  - **PR #2** https://github.com/Harivarma4/ingestion-platform/pull/2 (`fix/open-items` → `master`, **MERGED 5 Oct 10:17**): default-secret startup
     guard (non-dev ENVIRONMENT refuses default SECRET_KEY/<32 chars, ChangeMe123!, empty SECRETS_ENCRYPTION_KEY = all-zeros
     Fernet key); S3 source form uses access_key_id/secret_access_key/session_token (`SOURCE_CRED_FIELDS`); hashed lock files
     `requirements.lock` / `requirements-dev.lock` (uv --universal, py3.11) used by Dockerfile + CI, `scripts/check_lock.py` in CI;
     migration 0005 job-store CHECKs (`app/models/statuses.py`, values frozen in the revision) + composite indexes; 0004 downgrade
     fix. 255 tests.
-  - **PR #3** https://github.com/Harivarma4/ingestion-platform/pull/3 (`feat/q4-operations` → base `fix/open-items`, STACKED; retarget
-    to master after #2 merges; watched): the Q4 POC applied on top of the review fixes. Migration renumbered **0006** (adds
+  - **PR #3** https://github.com/Harivarma4/ingestion-platform/pull/3 (`feat/q4-operations` → `master` (retargeted after #2 merged); CI green,
+    mergeable, awaiting review/merge; watched): the Q4 POC applied on top of the review fixes. Migration renumbered **0006** (adds
     RETRY_WAIT to task CHECK, NOT NULL on POC tables, CHECKs on alert_deliveries/reconciliation_runs); croniter + tzdata added;
     start_job keeps worker-side partition clear; _claim + heartbeat/fencing combined. 270 tests. Scratch worktree `scratchpad/ip/ip-ops`.
   - Rating after these merge: ~8/10 (ops still lacks metrics/tracing; frontend tests; not yet run on PostgreSQL/real stack in CI).
