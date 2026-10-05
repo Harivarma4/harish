@@ -389,6 +389,18 @@ See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **
     "Deployment and release (4 Oct)" and entries, traceability C17.
   - OPEN: W6–W7 (9–20 Nov) are overloaded at 17 of 16 team-days; ING-27/28 land in the same weeks as wave 1 config and parallel run.
   - OPEN: what each client's QA environment loads from (test copy or prod sources read-only) — ING-12 now asks it.
+- **Latest (5 Oct) — IMPLEMENTED:** ingestion-platform code is in **GitHub `Harivarma4/ingestion-platform` (private)**.
+  - Source: Harish's `D:\ingestion-platform` 7z (`.env`, `.venv`, `.next`, caches excluded; `.env` never read). Q4 POC patch NOT applied.
+  - `master` = original 23 commits + `9bc66d1` Baseline (the ~60 uncommitted changes and 6 untracked files incl. migration 0004,
+    committed as-is; `.gitattributes` LF added). Branch **`fix/review-findings`** (`5d4befd`) fixes all 8 review bugs, one commit each
+    area: credentials (test endpoints never write secrets via OverlaySecretManager; PATCH merges; credential_ref must be owned,
+    closes a cross-client hole), dlt-normalized folder names, retries/partition clear (task-tagged file layout, atomic claim,
+    redelivery, worker-side prepare_partitioned_object, shared compose volume), SQL Server `bit` MIN/MAX, job-page event de-dup +
+    `after_id` cursor. Tests 210 → **231 passed**, ruff clean, frontend lint+build OK (tested with SQLAlchemy 2.0; 2.1 breaks one
+    existing test — needs the ING-04 lock file). No PR opened yet.
+  - PII registry: design only, `q4-road-map/drafts/pii_registry_design.md` (hook = second dlt add_map after the transform map in
+    `_run`, fail closed; `pii_column_rules` table keyed by connection+object+source column; Presidio provisional masking pre-run;
+    CDS address side-write; validation exclusions + new `masking` check; ≈14.5 engineer-days; 3 open questions).
 - **Next action:** see §24.
 
 ## 24. IMMEDIATE NEXT ACTION
