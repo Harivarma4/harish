@@ -423,8 +423,8 @@ See §11. Latest artifact versions: **deck v35**, **ticket pack 116 issues**, **
     `requirements.lock` / `requirements-dev.lock` (uv --universal, py3.11) used by Dockerfile + CI, `scripts/check_lock.py` in CI;
     migration 0005 job-store CHECKs (`app/models/statuses.py`, values frozen in the revision) + composite indexes; 0004 downgrade
     fix. 255 tests.
-  - **PR #3** https://github.com/Harivarma4/ingestion-platform/pull/3 (`feat/q4-operations` → `master` (retargeted after #2 merged); CI green,
-    mergeable, awaiting review/merge; watched): the Q4 POC applied on top of the review fixes. Migration renumbered **0006** (adds
+  - **PR #3** https://github.com/Harivarma4/ingestion-platform/pull/3 (`feat/q4-operations` → `master`; CI green, **MERGED 5 Oct 10:18**;
+    master now has PR #1–#3): the Q4 POC applied on top of the review fixes. Migration renumbered **0006** (adds
     RETRY_WAIT to task CHECK, NOT NULL on POC tables, CHECKs on alert_deliveries/reconciliation_runs); croniter + tzdata added;
     start_job keeps worker-side partition clear; _claim + heartbeat/fencing combined. 270 tests. Scratch worktree `scratchpad/ip/ip-ops`.
   - Rating after these merge: ~8/10 (ops still lacks metrics/tracing; frontend tests; not yet run on PostgreSQL/real stack in CI).
